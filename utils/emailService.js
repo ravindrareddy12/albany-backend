@@ -1,0 +1,44 @@
+// emailService.js
+const dotenv = require('dotenv');
+dotenv.config();
+const nodemailer = require("nodemailer");
+
+async function main(email,subject,text,html) {
+  
+    try{
+        console.log(email,subject,text,html)
+        // First, define send settings by creating a new transporter: 
+        let transporter = nodemailer.createTransport({
+          host: "smtp.mailersend.net", // SMTP server address (usually mail.your-domain.com)
+          port: 587, // Port for SMTP (usually 465)
+          secure: false, // Usually true if connecting to port 465
+          auth: {
+            user: "MS_2Rlqej@trial-yzkq34071mxld796.mlsender.net", // Your email address
+            pass: "3iaLgnXmmoLzzCrj", // Password (for gmail, your app password)
+            // ⚠️ For better security, use environment variables set on the server for these values when deploying
+          },
+          tls: {
+              ciphers:'SSLv3'
+          }
+        });
+        
+        // Define and send message inside transporter.sendEmail() and await info about send from promise:
+        let info = await transporter.sendMail({
+          from: '"Express Transportation" <MS_2Rlqej@trial-yzkq34071mxld796.mlsender.net>',
+          to: email,
+          subject: subject,
+          text:text,
+
+          html: html,
+        });
+        console.log(info);
+      
+    }catch(e){
+        console.log("node",e)
+    }
+    // Async function enables allows handling of promises with await
+   
+     // Random ID generated after successful send (optional)
+    }
+
+module.exports = main;
