@@ -45,7 +45,7 @@ exports.createBlogPost = async (req, res) => {
                 // Send emails to all subscribers
                 const emailSubject = `New Blog Post: ${postTitle}`;
                 const emailText = `Check out our new blog post titled "${postTitle}"! Here's a preview: ${postDescription}`;
-                const emailHtml = `<h1>${postTitle}</h1><p>${postDescription}</p><a href="#">Read More</a>`;
+                const emailHtml = `<h1>${postTitle}</h1><p>${postDescription}</p><a href="">Read More</a>`;
 
                 for (const subscriber of subscribers) {
                     await main(subscriber.email, emailSubject, emailText, emailHtml);

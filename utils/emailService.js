@@ -13,8 +13,8 @@ async function main(email,subject,text,html) {
           port: 587, // Port for SMTP (usually 465)
           secure: false, // Usually true if connecting to port 465
           auth: {
-            user: "MS_2Rlqej@trial-yzkq34071mxld796.mlsender.net", // Your email address
-            pass: "3iaLgnXmmoLzzCrj", // Password (for gmail, your app password)
+            user: "MS_nF90jd@trial-7dnvo4dpwk945r86.mlsender.net", // Your email address
+            pass: "IIhoRWz5wXZO9MW7", // Password (for gmail, your app password)
             // ⚠️ For better security, use environment variables set on the server for these values when deploying
           },
           tls: {
@@ -24,7 +24,7 @@ async function main(email,subject,text,html) {
         
         // Define and send message inside transporter.sendEmail() and await info about send from promise:
         let info = await transporter.sendMail({
-          from: '"Express Transportation" <MS_2Rlqej@trial-yzkq34071mxld796.mlsender.net>',
+          from: '"Express Transportation" <MS_nF90jd@trial-7dnvo4dpwk945r86.mlsender.net>',
           to: email,
           subject: subject,
           text:text,
