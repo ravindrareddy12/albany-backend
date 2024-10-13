@@ -95,7 +95,7 @@ exports.approveBlogPost = async (req, res) => {
 
     await post.save();
 
-    if (admin_fl) {
+    if (post.admin_fl) {
       const subscribers = await NewsletterSubscription.find({});
       const emailSubject = `New Blog Post: ${post.postTitle}`;
       const emailText = `Check out our new blog post titled "${post.postTitle}"! Here's a preview: ${post.postDescription}`;
