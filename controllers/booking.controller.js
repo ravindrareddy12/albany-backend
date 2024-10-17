@@ -47,7 +47,7 @@ exports.createBooking = async (req, res) => {
         // Create a new booking
         const booking = new Booking(bookingData);
          console.log(booking)
-        await sendBookingDetailsEmail(email,name,booking)
+        // await sendBookingDetailsEmail(email,name,booking)
 
         // Save the booking to the database
         await booking.save();

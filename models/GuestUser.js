@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const guestUserSchema = new mongoose.Schema({
   email: {
     type: String,
-    required: true,
-    unique: true,
+    required: true, 
     match: [/^\S+@\S+\.\S+$/, 'Please use a valid email address.'],
   },
   phone: {
