@@ -13,7 +13,7 @@ exports.createCar = async (req, res) => {
             return res.status(500).json({ message: 'File upload failed', error: err.message });
         }
 
-        const { carName, model, numberPlate, perKmPrice, perDayPrice, status } = req.body;
+        const { carName, model, numberPlate, perKmPrice, perDayPrice, status , passengers} = req.body;
 
         if (!req.file) {
             return res.status(400).json({ message: 'No file uploaded' });
@@ -31,9 +31,11 @@ exports.createCar = async (req, res) => {
                 perDayPrice,
                 perKmPrice,
                 status,
+                passengers,
                 carImage: result.Location
             });
-
+            console.log("cras",car)
+            console.log(result,"result")
             await car.save();
             res.status(201).json(car);
         } catch (error) {
@@ -66,7 +68,7 @@ exports.getCars = async (req, res) => {
             .limit(parseInt(limit));
 
         const totalCars = await Car.countDocuments(query);
-
+        // console.log(cars)
         res.status(200).json({
             cars,
             totalPages: Math.ceil(totalCars / limit),
@@ -98,8 +100,8 @@ exports.updateCar = async (req, res) => {
             return res.status(500).json({ message: 'File upload failed', error: err.message });
         }
 
-        const { carName, model, numberPlate, perKmPrice, perDayPrice, status } = req.body;
-        let updateData = { carName, model, numberPlate, perKmPrice, perDayPrice, status };
+        const { carName, model, numberPlate, perKmPrice, perDayPrice, status,passengers } = req.body;
+        let updateData = { carName, model, numberPlate, perKmPrice, perDayPrice, status,     };
 
         if (req.file) {
             const filePath = req.file.path;
