@@ -2,7 +2,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 
 // Use the updated connection URL format
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect("mongodb+srv://reddy:1234@cluster0.gdf3qiw.mongodb.net/albanytaxservices?retryWrites=true&w=majority", { useUnifiedTopology: true });
 
 const db = mongoose.connection;
 

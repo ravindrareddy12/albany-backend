@@ -1,7 +1,7 @@
 const express = require('express');
 const Stripe = require('stripe');
 const router = express.Router();
-const stripe = new Stripe('your_secret_key_here');  // Replace with your secret key
+const stripe = new Stripe('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');  // Replace with your secret key
 const Payment = require('../models/Payment');
 
 // Create payment intent and store payment
