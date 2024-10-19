@@ -5,6 +5,7 @@ const mailerUtil = require("../utils/mailerSendUtil");
 const GuestUser = require("../models/GuestUser");
 const mongoose = require("mongoose");
 const main = require("../utils/emailService");
+
 // Create a new booking
 exports.createBooking = async (req, res) => {
   const {
@@ -55,10 +56,19 @@ exports.createBooking = async (req, res) => {
       return res.status(400).json({ error: "Invalid userId" });
     }
 
+    // Fetch car details
+    const car = await Car.findById(carId);
+    if (!car) {
+      return res.status(404).json({ error: "Car not found" });
+    }
+    const carName = car.carName;
+
     // Create a new booking
     const booking = new Booking(bookingData);
-    console.log(booking);
-    await sendBookingDetailsEmail(email, name, booking);
+    await sendBookingDetailsEmail(email, name, booking, carName);
+
+    // Send booking details to admin users
+    await sendAdminBookingNotification(booking, carName);
 
     // Save the booking to the database
     await booking.save();
@@ -80,20 +90,21 @@ exports.createBooking = async (req, res) => {
   }
 };
 
-const sendBookingDetailsEmail = async (email, name, booking) => {
-  console.log(booking);
-  const subject = "Your Booking on Progress";
+// Function to send booking details email to the user
+const sendBookingDetailsEmail = async (email, name, booking, carName) => {
+  const subject = "Your Booking in Progress";
   const text = `Dear ${name},
 
 Thank you for your booking. Here are the details of your booking:
 
 Booking ID: ${booking._id}
-Car ID: ${booking.carId}
+Car: ${carName}
 Pickup Location: ${booking.pickupLocation}
 Drop Location: ${booking.dropLocation}
 Pickup Time: ${booking.pickupDateTime} 
 Drop Time: ${booking.dropDateTime}
 Status: ${booking.status}
+Payment Status: ${booking.paymentStatus}
 
 We will notify you once your booking status is updated.
 
@@ -104,19 +115,20 @@ ZS Transist Inc`;
                   <p>Thank you for your booking. Here are the details of your booking:</p>
                   <ul>
                     <li><strong>Booking ID:</strong> ${booking._id}</li>
-                    <li><strong>Car ID:</strong> ${booking.carId}</li>
+                    <li><strong>Car:</strong> ${carName}</li>
                     <li><strong>Pickup Location:</strong> ${booking.pickupLocation}</li>
                     <li><strong>Drop Location:</strong> ${booking.dropLocation}</li>
                     <li><strong>Pickup Time:</strong> ${booking.pickupDateTime}</li>
                     <li><strong>Drop Time:</strong> ${booking.dropDateTime}</li>
                     <li><strong>Status:</strong> ${booking.status}</li>
+                    <li><strong>Status:</strong>Payment Status: ${booking.paymentStatus}</li>
                   </ul>
                   <p>We will notify you once your booking status is updated.</p>
                   <p>Best regards,<br/>ZS Transist Inc</p>`;
 
   try {
     await main(email, subject, text, html);
-    console.log("Email sent successfully.");
+    console.log("Email sent successfully to the user.");
   } catch (error) {
     console.error(
       "Failed to send email:",
@@ -125,6 +137,56 @@ ZS Transist Inc`;
     throw new Error("Failed to send email");
   }
 };
+
+// Function to send booking details to admin users
+const sendAdminBookingNotification = async (booking, carName) => {
+  try {
+    // Find all admin users
+    const admins = await User.find({ role: "admin" });
+
+    // Extract admin emails
+    const adminEmails = admins.map((admin) => admin.email);
+
+    // Email content
+    const subject = "New Booking Created";
+    const text = `A new booking has been created. Here are the details:
+
+Booking ID: ${booking._id}
+Car: ${carName}
+Pickup Location: ${booking.pickupLocation}
+Drop Location: ${booking.dropLocation}
+Pickup Time: ${booking.pickupDateTime} 
+Drop Time: ${booking.dropDateTime}
+Status: ${booking.status}
+Payment Status: ${booking.paymentStatus}
+
+Please review the booking details in the admin panel.`;
+
+    const html = `<p>A new booking has been created. Here are the details:</p>
+                  <ul>
+                    <li><strong>Booking ID:</strong> ${booking._id}</li>
+                    <li><strong>Car:</strong> ${carName}</li>
+                    <li><strong>Pickup Location:</strong> ${booking.pickupLocation}</li>
+                    <li><strong>Drop Location:</strong> ${booking.dropLocation}</li>
+                    <li><strong>Pickup Time:</strong> ${booking.pickupDateTime}</li>
+                    <li><strong>Drop Time:</strong> ${booking.dropDateTime}</li>
+                    <li><strong>Status:</strong> ${booking.status}</li>
+                    <li><strong>Status:</strong>Payment Status: ${booking.paymentStatus}</li>
+                  </ul>
+                  <p>Please review the booking details in the admin panel.</p>`;
+
+    // Send email to each admin
+    for (const email of adminEmails) {
+      await main(email, subject, text, html);
+    }
+
+    console.log("Notification emails sent to admins successfully.");
+  } catch (error) {
+    console.error("Failed to send booking notification to admins:", error);
+    throw new Error("Failed to notify admins about the booking");
+  }
+};
+
 
 // Get booking details by booking ID
 exports.getBookingDetails = async (req, res) => {
