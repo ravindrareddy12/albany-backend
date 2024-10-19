@@ -22,10 +22,12 @@ exports.createBooking = async (req, res) => {
     pickupDateTime,
     dropDateTime,
     paymentStatus,
+    guestUserId,
   } = req.body;
 
+  let guestUser;
   try {
-    console.log(req.body)
+    console.log(req.body);
     let bookingData = {
       carId,
       pickupLocation,
@@ -40,23 +42,23 @@ exports.createBooking = async (req, res) => {
 
     // Check if guest user information is provided
     if (name && email && phone) {
-      console.log(req.body)
-      console.log(req.body.guestUserId)
-      // Find or create guest user
-      if(req.body.guestUserId){
-        let guestUser = await GuestUser.findOne({ email });
-
+      if (guestUserId) {
+        // If guestUserId is provided, find the guest user
+        guestUser = await GuestUser.findById(guestUserId);
+        if (!guestUser) {
+          return res.status(404).json({ error: "Guest user not found" });
+        }
+      } else {
+        // Otherwise, find or create a guest user by email
+        guestUser = await GuestUser.findOne({ email });
         if (!guestUser) {
           guestUser = new GuestUser({ name, email, phone });
           await guestUser.save();
         }
-  
-        // Set guestUserId for the booking
-        bookingData.guestUserId = guestUser._id;
-      }else{
-        bookingData.guestUserId = req.body.guestUserId
       }
-     
+
+      // Set guestUserId for the booking
+      bookingData.guestUserId = guestUser._id;
     } else if (mongoose.Types.ObjectId.isValid(userId)) {
       // Use the provided userId for the booking
       bookingData.userId = userId;
@@ -73,10 +75,14 @@ exports.createBooking = async (req, res) => {
 
     // Create a new booking
     const booking = new Booking(bookingData);
-    await sendBookingDetailsEmail(email, name, booking, carName);
+
+    // Send booking details to the guest user (if email exists)
+    if (email) {
+      await sendBookingDetailsEmail(email, name, booking, carName);
+    }
 
     // Send booking details to admin users
-    await sendAdminBookingNotification(booking, carName);
+    await sendAdminBookingNotification(booking, carName, guestUser);
 
     // Save the booking to the database
     await booking.save();
@@ -91,11 +97,11 @@ exports.createBooking = async (req, res) => {
           "Duplicate key error: A guest user with this phone number already exists.",
       });
     } else {
-
       res.status(400).json({ error: "Failed to create booking" });
     }
   }
 };
+
 
 // Function to send booking details email to the user
 const sendBookingDetailsEmail = async (email, name, booking, carName) => {
@@ -146,7 +152,8 @@ Express Transportation`;
 };
 
 // Function to send booking details to admin users
-const sendAdminBookingNotification = async (booking, carName) => {
+const sendAdminBookingNotification = async (booking, carName,guestUser) => {
+  console.log(guestUser)
   try {
     // Find all admin users
     const admins = await User.find({ role: "admin" });
@@ -163,7 +170,6 @@ Car: ${carName}
 Pickup Location: ${booking.pickupLocation}
 Drop Location: ${booking.dropLocation}
 Pickup Time: ${booking.pickupDateTime} 
-Drop Time: ${booking.dropDateTime}
 Status: ${booking.status}
 Payment Status: ${booking.paymentStatus}
 
@@ -176,10 +182,14 @@ Please review the booking details in the admin panel.`;
                     <li><strong>Pickup Location:</strong> ${booking.pickupLocation}</li>
                     <li><strong>Drop Location:</strong> ${booking.dropLocation}</li>
                     <li><strong>Pickup Time:</strong> ${booking.pickupDateTime}</li>
-                    <li><strong>Drop Time:</strong> ${booking.dropDateTime}</li>
                     <li><strong>Status:</strong> ${booking.status}</li>
                     <li><strong>Status:</strong>Payment Status: ${booking.paymentStatus}</li>
                   </ul>
+                  <br/>
+                  <p>Here are the User details:</p>
+                    <li><strong>Name:</strong> ${guestUser.name}</li>
+                    <li><strong>Email:</strong> ${guestUser.email}</li>
+                    <li><strong>Phone:</strong> ${guestUser.phone}</li>
                   <p>Please review the booking details in the admin panel.</p>`;
 
     // Send email to each admin
