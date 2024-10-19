@@ -78,12 +78,10 @@ exports.createBooking = async (req, res) => {
   } catch (error) {
     console.error(error);
     if (error.code === 11000) {
-      res
-        .status(400)
-        .json({
-          error:
-            "Duplicate key error: A guest user with this phone number already exists.",
-        });
+      res.status(400).json({
+        error:
+          "Duplicate key error: A guest user with this phone number already exists.",
+      });
     } else {
       res.status(400).json({ error: "Failed to create booking" });
     }
@@ -109,7 +107,7 @@ Payment Status: ${booking.paymentStatus}
 We will notify you once your booking status is updated.
 
 Best regards,
-ZS Transist Inc`;
+Express Transportation`;
 
   const html = `<p>Dear ${name},</p>
                   <p>Thank you for your booking. Here are the details of your booking:</p>
@@ -124,7 +122,7 @@ ZS Transist Inc`;
                     <li><strong>Status:</strong>Payment Status: ${booking.paymentStatus}</li>
                   </ul>
                   <p>We will notify you once your booking status is updated.</p>
-                  <p>Best regards,<br/>ZS Transist Inc</p>`;
+                  <p>Best regards,<br/>Express Transportation Inc</p>`;
 
   try {
     await main(email, subject, text, html);
@@ -186,7 +184,6 @@ Please review the booking details in the admin panel.`;
     throw new Error("Failed to notify admins about the booking");
   }
 };
-
 
 // Get booking details by booking ID
 exports.getBookingDetails = async (req, res) => {
