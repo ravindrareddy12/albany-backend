@@ -32,7 +32,7 @@ const registerUser = async (req, res) => {
     const text = `Your OTP code is ${otpCode}. It will expire in 15 minutes.`;
     const html = `<p>Your OTP code is <strong>${otpCode}</strong>. It will expire in 15 minutes.</p>`;
     
-    // await main(email, subject, text, html);
+    await main(email, subject, text, html);
     return res.status(200).json({ message: 'Otp Sent Sucessfully' });
    
   } catch (error) {

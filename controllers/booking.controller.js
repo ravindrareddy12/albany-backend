@@ -25,6 +25,7 @@ exports.createBooking = async (req, res) => {
   } = req.body;
 
   try {
+    console.log(req.body)
     let bookingData = {
       carId,
       pickupLocation,
@@ -39,16 +40,23 @@ exports.createBooking = async (req, res) => {
 
     // Check if guest user information is provided
     if (name && email && phone) {
+      console.log(req.body)
+      console.log(req.body.guestUserId)
       // Find or create guest user
-      let guestUser = await GuestUser.findOne({ email });
+      if(req.body.guestUserId){
+        let guestUser = await GuestUser.findOne({ email });
 
-      if (!guestUser) {
-        guestUser = new GuestUser({ name, email, phone });
-        await guestUser.save();
+        if (!guestUser) {
+          guestUser = new GuestUser({ name, email, phone });
+          await guestUser.save();
+        }
+  
+        // Set guestUserId for the booking
+        bookingData.guestUserId = guestUser._id;
+      }else{
+        bookingData.guestUserId = req.body.guestUserId
       }
-
-      // Set guestUserId for the booking
-      bookingData.guestUserId = guestUser._id;
+     
     } else if (mongoose.Types.ObjectId.isValid(userId)) {
       // Use the provided userId for the booking
       bookingData.userId = userId;
@@ -83,6 +91,7 @@ exports.createBooking = async (req, res) => {
           "Duplicate key error: A guest user with this phone number already exists.",
       });
     } else {
+
       res.status(400).json({ error: "Failed to create booking" });
     }
   }

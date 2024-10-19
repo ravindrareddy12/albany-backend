@@ -21,6 +21,8 @@ const sendErrorEmail = require('./middleware/Errormailer');
 const jwt = require('jsonwebtoken');
 const newsletterRoutes = require('./routes/newsletterRoutes');
 const paymentRoutes = require('./controllers/paymentController')
+const guestUserRoutes = require('./routes/guestUserRoutes')
+
 dotenv.config();
 const app = express();
 
@@ -88,6 +90,7 @@ app.use('/api/blog', blogFormRoutes);
 app.use('/api', contactFormRoutes);
 app.use('/api', newsletterRoutes);
 app.use('/api', paymentRoutes);
+app.use('/api', guestUserRoutes);
 // Global error handling middleware
 app.use((err, req, res, next) => {
   console.error("Global Error:", err.stack);
