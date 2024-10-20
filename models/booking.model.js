@@ -12,7 +12,8 @@ const BookingSchema = new Schema({
     status: { type: String, required: true },
     fare: { type: Number, required: true },
     feedback: { type: String },
-    paymentStatus:{type:String}
+    paymentStatus:{type:String},
+    comment:{type:String}
 });
 
 module.exports = mongoose.model('Booking', BookingSchema);  

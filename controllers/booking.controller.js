@@ -259,7 +259,7 @@ exports.getAllBookings = async (req, res) => {
     page = 1,
     limit = 10,
     sortBy = "createdAt",
-    order = "desc",
+    order = "asc",
   } = req.query; // Default values if not provided
 
   try {
@@ -311,7 +311,7 @@ exports.getAllBookings = async (req, res) => {
 
 // Update booking status by booking ID
 exports.updateBookingStatus = async (req, res) => {
-  const { status } = req.body;
+  const { status,comment } = req.body;
 
   if (!status) {
     return res.status(400).json({ error: "Status is required" });
@@ -321,7 +321,7 @@ exports.updateBookingStatus = async (req, res) => {
     // Find and update the booking by ID
     const updatedBooking = await Booking.findByIdAndUpdate(
       req.params.id,
-      { status },
+      { status,comment : comment ? comment : '' },
       { new: true }
     )
       .populate("userId", "name email")
@@ -341,7 +341,7 @@ exports.updateBookingStatus = async (req, res) => {
     const user = updatedBooking.userId || updatedBooking.guestUserId;
     const email = user.email;
     const subject = "Booking Status Updated";
-    const text = `Dear ${user.name},\n\nYour booking status has been updated to: ${status}.\n\nBest regards,\nYour Company Name`;
+    const text = `Dear ${user.name},\n\nYour booking status has been updated to: ${status} comment : ${comment}.\n\nBest regards,\n Express Transportation`;
 
     await main(email, subject, text);
   } catch (error) {
