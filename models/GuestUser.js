@@ -9,7 +9,6 @@ const guestUserSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: true,
-    match: [/^\d{10}$/, 'Please use a valid phone number.'],
   },
   name: {
     type: String,

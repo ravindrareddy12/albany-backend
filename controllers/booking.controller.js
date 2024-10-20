@@ -8,6 +8,7 @@ const main = require("../utils/emailService");
 
 // Create a new booking
 exports.createBooking = async (req, res) => {
+  console.log("enterd")
   const {
     name,
     email,
@@ -46,6 +47,7 @@ exports.createBooking = async (req, res) => {
         // If guestUserId is provided, find the guest user
         guestUser = await GuestUser.findById(guestUserId);
         if (!guestUser) {
+          
           return res.status(404).json({ error: "Guest user not found" });
         }
       } else {
@@ -65,7 +67,6 @@ exports.createBooking = async (req, res) => {
     } else {
       return res.status(400).json({ error: "Invalid userId" });
     }
-
     // Fetch car details
     const car = await Car.findById(carId);
     if (!car) {
@@ -97,11 +98,11 @@ exports.createBooking = async (req, res) => {
           "Duplicate key error: A guest user with this phone number already exists.",
       });
     } else {
+
       res.status(400).json({ error: "Failed to create booking" });
     }
   }
 };
-
 
 // Function to send booking details email to the user
 const sendBookingDetailsEmail = async (email, name, booking, carName) => {
@@ -152,8 +153,8 @@ Express Transportation`;
 };
 
 // Function to send booking details to admin users
-const sendAdminBookingNotification = async (booking, carName,guestUser) => {
-  console.log(guestUser)
+const sendAdminBookingNotification = async (booking, carName, guestUser) => {
+  console.log(guestUser);
   try {
     // Find all admin users
     const admins = await User.find({ role: "admin" });
@@ -227,31 +228,49 @@ exports.getBookingDetails = async (req, res) => {
 // Get bookings by user ID with pagination
 exports.getBookingsByUserId = async (req, res) => {
   const { page = 1, limit = 10 } = req.query; // Default values if not provided
+  const { userId } = req.params; // Destructure userId from req.params
 
   try {
-    const bookings = await Booking.find({ userId: req.params.userId })
+    // Validate page and limit
+    const pageNumber = Math.max(1, Number(page)); // Ensure page is at least 1
+    const limitNumber = Math.max(1, Number(limit)); // Ensure limit is at least 1
+
+    // Find guest user by ID
+    const normalUser = await User.findById(userId);
+    if (!normalUser) {
+      return res.status(404).send({ message: "User not found." });
+    }
+
+    const guestUser = await GuestUser.findOne({ email: normalUser.email });
+    if (!guestUser) {
+      return res.status(404).send({ message: "Guest user not found." });
+    }
+
+    // Fetch bookings for the guest user
+    const bookings = await Booking.find({ guestUserId: guestUser._id })
       .populate("userId", "name email")
       .populate("guestUserId", "name email phone")
       .populate("carId", "name perKmPrice perDayPrice model")
-      .limit(limit * 1) // Limit the number of results per page
-      .skip((page - 1) * limit) // Skip results based on the current page
-      .exec(); // Execute the query
+      .limit(limitNumber)
+      .skip((pageNumber - 1) * limitNumber)
+      .exec();
 
-    const count = await Booking.countDocuments({ userId: req.params.userId });
+    // Get total count of bookings
+    const count = await Booking.countDocuments({ guestUserId: guestUser._id });
 
-    if (!bookings.length) {
-      return res.status(404).send("No bookings found for this user");
-    }
-
-    res.send({
+    // Return bookings and pagination info
+    res.status(200).send({
       bookings,
-      totalPages: Math.ceil(count / limit),
-      currentPage: page,
+      totalPages: Math.ceil(count / limitNumber),
+      currentPage: pageNumber,
     });
   } catch (error) {
-    res.status(400).send(error);
+    console.error("Error fetching bookings:", error);
+    res.status(500).send({ message: "An error occurred while fetching bookings.", error: error.message });
   }
 };
+
+
 
 // Get all bookings with pagination
 exports.getAllBookings = async (req, res) => {
@@ -311,7 +330,7 @@ exports.getAllBookings = async (req, res) => {
 
 // Update booking status by booking ID
 exports.updateBookingStatus = async (req, res) => {
-  const { status,comment } = req.body;
+  const { status, comment } = req.body;
 
   if (!status) {
     return res.status(400).json({ error: "Status is required" });
@@ -321,7 +340,7 @@ exports.updateBookingStatus = async (req, res) => {
     // Find and update the booking by ID
     const updatedBooking = await Booking.findByIdAndUpdate(
       req.params.id,
-      { status,comment : comment ? comment : '' },
+      { status, comment: comment ? comment : "" },
       { new: true }
     )
       .populate("userId", "name email")

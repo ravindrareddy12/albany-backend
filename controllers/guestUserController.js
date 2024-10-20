@@ -7,6 +7,11 @@ exports.createGuestUser = async (req, res) => {
     const { email, phone, name } = req.body;
 
     // Create a new guest user
+   const emailExists =  await GuestUser.find({email:email});
+   if(emailExists){
+
+    return  res.status(201).json({ message: 'Guest user created successfully',guestUser:emailExists });
+   }
     const guestUser = new GuestUser({ email, phone, name });
     
     // Save the guest user to the database
@@ -14,6 +19,7 @@ exports.createGuestUser = async (req, res) => {
 
     return res.status(201).json({ message: 'Guest user created successfully', guestUser });
   } catch (error) {
+    console.log(error)
     // Handle validation errors or other errors
     if (error.name === 'ValidationError') {
       return res.status(400).json({ message: error.message });
