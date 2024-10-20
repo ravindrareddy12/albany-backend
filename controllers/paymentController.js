@@ -7,11 +7,11 @@ const Payment = require('../models/Payment');
 // Create payment intent and store payment
 router.post('/create-payment-intent', async (req, res) => {
   const { amount, currency, userId } = req.body;
-
+  console.log(req.body,"paymenrt details")
   try {
     // Create a payment intent with Stripe
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount,
+      amount: Math.round(amount * 100),
       currency: currency,
     });
 
