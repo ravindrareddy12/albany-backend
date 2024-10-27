@@ -79,11 +79,11 @@ exports.createBooking = async (req, res) => {
 
     // Send booking details to the guest user (if email exists)
     if (email) {
-      await sendBookingDetailsEmail(email, name, booking, carName);
+      // await sendBookingDetailsEmail(email, name, booking, carName);
     }
 
     // Send booking details to admin users
-    await sendAdminBookingNotification(booking, carName, guestUser);
+    // await sendAdminBookingNotification(booking, carName, guestUser);
 
     // Save the booking to the database
     await booking.save();

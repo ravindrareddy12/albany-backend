@@ -20,4 +20,7 @@ router.put('/update/:id', blogPostController.updateBlogPost);
 // Route to delete a blog post
 router.delete('/delete/:id', blogPostController.deleteBlogPost);
 
+router.get('/:id', blogPostController.getBlogPostById);
+
+
 module.exports = router;
