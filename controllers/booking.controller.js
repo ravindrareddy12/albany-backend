@@ -77,9 +77,14 @@ exports.createBooking = async (req, res) => {
     const booking = new Booking(bookingData);
 
     // Send booking details to the guest user (if email exists)
-   
-      await sendBookingDetailsEmail(guestUser.email, name, booking, carName,guestUser);
 
+    await sendBookingDetailsEmail(
+      guestUser.email,
+      name,
+      booking,
+      carName,
+      guestUser
+    );
 
     // Send booking details to admin users
     await sendAdminBookingNotification(booking, carName, guestUser);
@@ -229,24 +234,72 @@ Pickup Time: ${booking.pickupDateTime}
 Status: ${booking.status}
 Payment Status: ${booking.paymentStatus}
 
+Guest Details:
+Name: ${guestUser.name}
+Email: ${guestUser.email}
+Phone: ${guestUser.phone}
+
 Please review the booking details in the admin panel.`;
 
-    const html = `<p>A new booking has been created. Here are the details:</p>
-                  <ul>
-                    <li><strong>Booking ID:</strong> ${booking._id}</li>
-                    <li><strong>Car:</strong> ${carName}</li>
-                    <li><strong>Pickup Location:</strong> ${booking.pickupLocation}</li>
-                    <li><strong>Drop Location:</strong> ${booking.dropLocation}</li>
-                    <li><strong>Pickup Time:</strong> ${booking.pickupDateTime}</li>
-                    <li><strong>Status:</strong> ${booking.status}</li>
-                    <li><strong>Status:</strong>Payment Status: ${booking.paymentStatus}</li>
-                  </ul>
-                  <br/>
-                  <p>Here are the User details:</p>
-                    <li><strong>Name:</strong> ${guestUser.name}</li>
-                    <li><strong>Email:</strong> ${guestUser.email}</li>
-                    <li><strong>Phone:</strong> ${guestUser.phone}</li>
-                  <p>Please review the booking details in the admin panel.</p>`;
+    const html = `
+      <div style="font-family: Arial, sans-serif; color: #333;">
+        <h2 style="color: #DC143C;">New Booking Notification</h2>
+        <p>A new booking has been created. Here are the details:</p>
+
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+          <tr>
+            <td colspan="2" style="border-bottom: 2px solid #ddd; padding-bottom: 8px;"><strong>Booking Details</strong></td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; width: 30%; color: #555;">Booking ID:</td>
+            <td style="padding: 8px;">${booking._id}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; color: #555;">Car:</td>
+            <td style="padding: 8px;">${carName}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; color: #555;">Pickup Location:</td>
+            <td style="padding: 8px;">${booking.pickupLocation}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; color: #555;">Drop Location:</td>
+            <td style="padding: 8px;">${booking.dropLocation}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; color: #555;">Pickup Time:</td>
+            <td style="padding: 8px;">${booking.pickupDateTime}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; color: #555;">Status:</td>
+            <td style="padding: 8px;">${booking.status}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; color: #555;">Payment Status:</td>
+            <td style="padding: 8px;">${booking.paymentStatus}</td>
+          </tr>
+        </table>
+
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+          <tr>
+            <td colspan="2" style="border-bottom: 2px solid #ddd; padding-bottom: 8px;"><strong> User Details</strong></td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; color: #555;">Name:</td>
+            <td style="padding: 8px;">${guestUser.name}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; color: #555;">Email:</td>
+            <td style="padding: 8px;">${guestUser.email}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; color: #555;">Phone:</td>
+            <td style="padding: 8px;">${guestUser.phone}</td>
+          </tr>
+        </table>
+
+        <p>Please review the booking details in the admin panel.</p>
+      </div>`;
 
     // Send email to each admin
     for (const email of adminEmails) {
@@ -321,12 +374,10 @@ exports.getBookingsByUserId = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching bookings:", error);
-    res
-      .status(500)
-      .send({
-        message: "An error occurred while fetching bookings.",
-        error: error.message,
-      });
+    res.status(500).send({
+      message: "An error occurred while fetching bookings.",
+      error: error.message,
+    });
   }
 };
 
