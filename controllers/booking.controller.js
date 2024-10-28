@@ -8,7 +8,7 @@ const main = require("../utils/emailService");
 
 // Create a new booking
 exports.createBooking = async (req, res) => {
-  console.log("enterd")
+  console.log("enterd");
   const {
     name,
     email,
@@ -47,7 +47,6 @@ exports.createBooking = async (req, res) => {
         // If guestUserId is provided, find the guest user
         guestUser = await GuestUser.findById(guestUserId);
         if (!guestUser) {
-          
           return res.status(404).json({ error: "Guest user not found" });
         }
       } else {
@@ -78,9 +77,9 @@ exports.createBooking = async (req, res) => {
     const booking = new Booking(bookingData);
 
     // Send booking details to the guest user (if email exists)
-    if (email) {
-      await sendBookingDetailsEmail(email, name, booking, carName);
-    }
+   
+      await sendBookingDetailsEmail(guestUser.email, name, booking, carName,guestUser);
+
 
     // Send booking details to admin users
     await sendAdminBookingNotification(booking, carName, guestUser);
@@ -98,14 +97,13 @@ exports.createBooking = async (req, res) => {
           "Duplicate key error: A guest user with this phone number already exists.",
       });
     } else {
-
       res.status(400).json({ error: "Failed to create booking" });
     }
   }
 };
 
 // Function to send booking details email to the user
-const sendBookingDetailsEmail = async (email, name, booking, carName) => {
+const sendBookingDetailsEmail = async (email, name, booking, carName, user) => {
   const subject = "Your Booking in Progress";
   const text = `Dear ${name},
 
@@ -144,16 +142,8 @@ Express Transportation`;
           <td style="padding: 8px;">${booking.status}</td>
         </tr>
         <tr>
-          <td style="padding: 8px; color: #555;">Service Type:</td>
-          <td style="padding: 8px;">${booking.serviceType}</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px; color: #555;">Transfer Type:</td>
-          <td style="padding: 8px;">${booking.transferType}</td>
-        </tr>
-        <tr>
           <td style="padding: 8px; color: #555;">Order Total Amount:</td>
-          <td style="padding: 8px;">$${booking.amount}</td>
+          <td style="padding: 8px;">$${booking.fare}</td>
         </tr>
       </table>
       
@@ -180,13 +170,7 @@ Express Transportation`;
           <td style="padding: 8px;">${carName}</td>
         </tr>
         <tr>
-          <td style="padding: 8px; color: #555;">Bag Count:</td>
-          <td style="padding: 8px;">${booking.bagCount}</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px; color: #555;">Passenger Count:</td>
-          <td style="padding: 8px;">${booking.passengerCount}</td>
-        </tr>
+        
       </table>
 
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
@@ -199,11 +183,11 @@ Express Transportation`;
         </tr>
         <tr>
           <td style="padding: 8px; color: #555;">Email:</td>
-          <td style="padding: 8px;">${booking.email}</td>
+          <td style="padding: 8px;">${user.email}</td>
         </tr>
         <tr>
           <td style="padding: 8px; color: #555;">Phone:</td>
-          <td style="padding: 8px;">${booking.phone}</td>
+          <td style="padding: 8px;">${user.phone}</td>
         </tr>
       </table>
 
@@ -222,7 +206,6 @@ Express Transportation`;
     throw new Error("Failed to send email");
   }
 };
-
 
 // Function to send booking details to admin users
 const sendAdminBookingNotification = async (booking, carName, guestUser) => {
@@ -338,11 +321,14 @@ exports.getBookingsByUserId = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching bookings:", error);
-    res.status(500).send({ message: "An error occurred while fetching bookings.", error: error.message });
+    res
+      .status(500)
+      .send({
+        message: "An error occurred while fetching bookings.",
+        error: error.message,
+      });
   }
 };
-
-
 
 // Get all bookings with pagination
 exports.getAllBookings = async (req, res) => {
