@@ -240,48 +240,48 @@ We will notify you once your booking status is updated.
 Best regards,
 Express Transportation`;
 
-  const html = `
+const html = `
 <div style="width: 100%; max-width: 600px; margin: auto; background-color: #fff; padding: 20px; border: 1px solid #e0e0e0; font-family: Times New Roman, Times, serif; color: #333;">
     <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">General</h2>
     <div style="padding: 10px 0;">
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px;">Title : </span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Title : </span>
             <span><a href="#" style="color: #007bff; text-decoration: none;">${
               booking._id
             }</a></span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px;">Booking form name</span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Booking form name</span>
             <span>Booking form</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px;">Status</span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Status</span>
             <span>${booking.status}</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px;">Service type</span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Service type</span>
             <span>Distance</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px;">Transfer type</span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Transfer type</span>
             <span>One Way</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px;">Pickup date and time</span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Pickup date and time</span>
             <span>${booking.pickupDateTime}</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px;">Order total amount</span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Order total amount</span>
             <span>$${booking.fare}</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px;">Comment</span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Comment</span>
             <span>NA</span>
         </div>
     </div>
 
     <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">Route Locations</h2>
-   <div style="padding: 10px 0;">
+    <div style="padding: 10px 0;">
     ${[booking.pickupLocation, booking.dropLocation]
       .map(
         (location, index) => `
@@ -302,20 +302,18 @@ Express Transportation`;
       .join("")}
 </div>
 
-
-
     <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">Vehicle</h2>
     <div style="padding: 10px 0;">
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px;">Vehicle name</span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Vehicle name</span>
             <span>${carName}</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px;">Bag count</span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Bag count</span>
             <span>1</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px;">Passengers count</span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Passengers count</span>
             <span>${passengers}</span>
         </div>
     </div>
@@ -323,11 +321,11 @@ Express Transportation`;
     <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">Client Details</h2>
     <div style="padding: 10px 0;">
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px;">Name</span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Name</span>
             <span>${user.name}</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px;">Email ID  </span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Email ID  </span>
             <span><a href="mailto:${
               user.email
             }" style="color: #007bff;">${
@@ -335,7 +333,7 @@ Express Transportation`;
   }</a></span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px;">Contact Number</span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Contact Number</span>
             <span><a href="tel:${
               user.phone
             }" style="color: #007bff;">${
@@ -347,12 +345,13 @@ Express Transportation`;
     <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">Payment</h2>
     <div style="padding: 10px 0;">
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px;">Payment</span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Payment</span>
             <span>${booking.paymentStatus}</span>
         </div>
     </div>
 </div>
 `;
+
 
   try {
     await main(email, subject, text, html);
