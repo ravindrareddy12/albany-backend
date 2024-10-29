@@ -333,12 +333,12 @@ const html = `
     <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">Client Details</h2>
     <div style="padding: 10px 0;">
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Name</span>
-            <span>${user.name}</span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Client ID</span>
+            <span>${user._id.toString().slice(-5)}</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Name</span>
-            <span>${user._id}</span>
+            <span>${user.name}</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Email Adress  </span>
