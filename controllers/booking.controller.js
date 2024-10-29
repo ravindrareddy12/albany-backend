@@ -83,7 +83,8 @@ exports.createBooking = async (req, res) => {
       name,
       booking,
       carName,
-      guestUser
+      guestUser,
+      car.passengers
     );
 
     // Send booking details to admin users
@@ -108,7 +109,118 @@ exports.createBooking = async (req, res) => {
 };
 
 // Function to send booking details email to the user
-const sendBookingDetailsEmail = async (email, name, booking, carName, user) => {
+// const sendBookingDetailsEmail = async (email, name, booking, carName, user) => {
+//   const subject = "Your Booking in Progress";
+//   const text = `Dear ${name},
+
+// Thank you for your booking. Here are the details of your booking:
+
+// Booking ID: ${booking._id}
+// Car: ${carName}
+// Pickup Location: ${booking.pickupLocation}
+// Drop Location: ${booking.dropLocation}
+// Pickup Time: ${booking.pickupDateTime}
+// Drop Time: ${booking.dropDateTime}
+// Status: ${booking.status}
+// Payment Status: ${booking.paymentStatus}
+
+// We will notify you once your booking status is updated.
+
+// Best regards,
+// Express Transportation`;
+
+//   const html = `
+//     <div style="font-family: Arial, sans-serif; color: #333;">
+//       <h2 style="color: #1E90FF;">Booking Confirmation</h2>
+//       <p>Dear ${name},</p>
+//       <p>Thank you for your booking. Here are the details:</p>
+
+//       <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+//         <tr>
+//           <td colspan="2" style="border-bottom: 2px solid #ddd; padding-bottom: 8px;"><strong>General</strong></td>
+//         </tr>
+//         <tr>
+//           <td style="padding: 8px; width: 30%; color: #555;">Booking ID:</td>
+//           <td style="padding: 8px;">${booking._id}</td>
+//         </tr>
+//         <tr>
+//           <td style="padding: 8px; color: #555;">Status:</td>
+//           <td style="padding: 8px;">${booking.status}</td>
+//         </tr>
+//         <tr>
+//           <td style="padding: 8px; color: #555;">Order Total Amount:</td>
+//           <td style="padding: 8px;">$${booking.fare}</td>
+//         </tr>
+//       </table>
+
+//       <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+//         <tr>
+//           <td colspan="2" style="border-bottom: 2px solid #ddd; padding-bottom: 8px;"><strong>Route Locations</strong></td>
+//         </tr>
+//         <tr>
+//           <td style="padding: 8px; color: #555;">Pickup Location:</td>
+//           <td style="padding: 8px;">${booking.pickupLocation}</td>
+//         </tr>
+//         <tr>
+//           <td style="padding: 8px; color: #555;">Drop Location:</td>
+//           <td style="padding: 8px;">${booking.dropLocation}</td>
+//         </tr>
+//       </table>
+
+//       <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+//         <tr>
+//           <td colspan="2" style="border-bottom: 2px solid #ddd; padding-bottom: 8px;"><strong>Vehicle</strong></td>
+//         </tr>
+//         <tr>
+//           <td style="padding: 8px; color: #555;">Car:</td>
+//           <td style="padding: 8px;">${carName}</td>
+//         </tr>
+//         <tr>
+
+//       </table>
+
+//       <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+//         <tr>
+//           <td colspan="2" style="border-bottom: 2px solid #ddd; padding-bottom: 8px;"><strong>Client Details</strong></td>
+//         </tr>
+//         <tr>
+//           <td style="padding: 8px; color: #555;">Name:</td>
+//           <td style="padding: 8px;">${name}</td>
+//         </tr>
+//         <tr>
+//           <td style="padding: 8px; color: #555;">Email:</td>
+//           <td style="padding: 8px;">${user.email}</td>
+//         </tr>
+//         <tr>
+//           <td style="padding: 8px; color: #555;">Phone:</td>
+//           <td style="padding: 8px;">${user.phone}</td>
+//         </tr>
+//       </table>
+
+//       <p>We will notify you once your booking status is updated.</p>
+//       <p>Best regards,<br/>Express Transportation Inc</p>
+//     </div>`;
+
+//   try {
+//     await main(email, subject, text, html);
+//     console.log("Email sent successfully to the user.");
+//   } catch (error) {
+//     console.error(
+//       "Failed to send email:",
+//       error.response ? error.response.body : error.message
+//     );
+//     throw new Error("Failed to send email");
+//   }
+// };
+
+const sendBookingDetailsEmail = async (
+  email,
+  name,
+  booking,
+  carName,
+  user,
+  passengers
+) => {
   const subject = "Your Booking in Progress";
   const text = `Dear ${name},
 
@@ -129,76 +241,118 @@ Best regards,
 Express Transportation`;
 
   const html = `
-    <div style="font-family: Arial, sans-serif; color: #333;">
-      <h2 style="color: #1E90FF;">Booking Confirmation</h2>
-      <p>Dear ${name},</p>
-      <p>Thank you for your booking. Here are the details:</p>
-      
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-        <tr>
-          <td colspan="2" style="border-bottom: 2px solid #ddd; padding-bottom: 8px;"><strong>General</strong></td>
-        </tr>
-        <tr>
-          <td style="padding: 8px; width: 30%; color: #555;">Booking ID:</td>
-          <td style="padding: 8px;">${booking._id}</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px; color: #555;">Status:</td>
-          <td style="padding: 8px;">${booking.status}</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px; color: #555;">Order Total Amount:</td>
-          <td style="padding: 8px;">$${booking.fare}</td>
-        </tr>
-      </table>
-      
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-        <tr>
-          <td colspan="2" style="border-bottom: 2px solid #ddd; padding-bottom: 8px;"><strong>Route Locations</strong></td>
-        </tr>
-        <tr>
-          <td style="padding: 8px; color: #555;">Pickup Location:</td>
-          <td style="padding: 8px;">${booking.pickupLocation}</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px; color: #555;">Drop Location:</td>
-          <td style="padding: 8px;">${booking.dropLocation}</td>
-        </tr>
-      </table>
+<div style="width: 100%; max-width: 600px; margin: auto; background-color: #fff; padding: 20px; border: 1px solid #e0e0e0; font-family: Times New Roman, Times, serif; color: #333;">
+    <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">General</h2>
+    <div style="padding: 10px 0;">
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px;">Title : </span>
+            <span><a href="#" style="color: #007bff; text-decoration: none;">${
+              booking._id
+            }</a></span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px;">Booking form name</span>
+            <span>Booking form</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px;">Status</span>
+            <span>${booking.status}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px;">Service type</span>
+            <span>Distance</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px;">Transfer type</span>
+            <span>One Way</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px;">Pickup date and time</span>
+            <span>${booking.pickupDateTime}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px;">Order total amount</span>
+            <span>$${booking.fare}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px;">Comment</span>
+            <span>NA</span>
+        </div>
+    </div>
 
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-        <tr>
-          <td colspan="2" style="border-bottom: 2px solid #ddd; padding-bottom: 8px;"><strong>Vehicle</strong></td>
-        </tr>
-        <tr>
-          <td style="padding: 8px; color: #555;">Car:</td>
-          <td style="padding: 8px;">${carName}</td>
-        </tr>
-        <tr>
-        
-      </table>
+    <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">Route Locations</h2>
+   <div style="padding: 10px 0;">
+    ${[booking.pickupLocation, booking.dropLocation]
+      .map(
+        (location, index) => `
+      <div style="display: flex; font-size: 14px;">
+          <span style="color: #666; font-weight: bold;">
+            ${
+              index + 1
+            }. <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+          location
+        )}" 
+            target="_blank" style="color: #007bff;margin-left: 5px;">
+              ${location}
+            </a>
+          </span>
+      </div>
+  `
+      )
+      .join("")}
+</div>
 
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-        <tr>
-          <td colspan="2" style="border-bottom: 2px solid #ddd; padding-bottom: 8px;"><strong>Client Details</strong></td>
-        </tr>
-        <tr>
-          <td style="padding: 8px; color: #555;">Name:</td>
-          <td style="padding: 8px;">${name}</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px; color: #555;">Email:</td>
-          <td style="padding: 8px;">${user.email}</td>
-        </tr>
-        <tr>
-          <td style="padding: 8px; color: #555;">Phone:</td>
-          <td style="padding: 8px;">${user.phone}</td>
-        </tr>
-      </table>
 
-      <p>We will notify you once your booking status is updated.</p>
-      <p>Best regards,<br/>Express Transportation Inc</p>
-    </div>`;
+
+    <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">Vehicle</h2>
+    <div style="padding: 10px 0;">
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px;">Vehicle name</span>
+            <span>${carName}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px;">Bag count</span>
+            <span>1</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px;">Passengers count</span>
+            <span>${passengers}</span>
+        </div>
+    </div>
+
+    <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">Client Details</h2>
+    <div style="padding: 10px 0;">
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px;">Name</span>
+            <span>${user.name}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px;">Email ID  </span>
+            <span><a href="mailto:${
+              user.email
+            }" style="color: #007bff;">${
+    user.email
+  }</a></span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px;">Contact Number</span>
+            <span><a href="tel:${
+              user.phone
+            }" style="color: #007bff;">${
+    user.phone
+  }</a></span>
+        </div>
+    </div>
+
+    <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">Payment</h2>
+    <div style="padding: 10px 0;">
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px;">Payment</span>
+            <span>${booking.paymentStatus}</span>
+        </div>
+    </div>
+</div>
+`;
 
   try {
     await main(email, subject, text, html);
@@ -211,7 +365,6 @@ Express Transportation`;
     throw new Error("Failed to send email");
   }
 };
-
 // Function to send booking details to admin users
 const sendAdminBookingNotification = async (booking, carName, guestUser) => {
   console.log(guestUser);
