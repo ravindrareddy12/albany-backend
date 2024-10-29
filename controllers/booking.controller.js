@@ -24,6 +24,8 @@ exports.createBooking = async (req, res) => {
     dropDateTime,
     paymentStatus,
     guestUserId,
+    distance,
+    duration
   } = req.body;
 
   let guestUser;
@@ -39,6 +41,8 @@ exports.createBooking = async (req, res) => {
       pickupDateTime,
       dropDateTime,
       paymentStatus,
+      distance,
+      duration
     };
 
     // Check if guest user information is provided
@@ -245,9 +249,9 @@ const html = `
     <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">General</h2>
     <div style="padding: 10px 0;">
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Title : </span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;"> Reservation Number </span>
             <span><a href="#" style="color: #007bff; text-decoration: none;">${
-              booking._id
+              booking._id.toString().slice(-5)
             }</a></span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
@@ -261,6 +265,14 @@ const html = `
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Service type</span>
             <span>Distance</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Distance</span>
+            <span>${booking.distance} Miles</span>
+        </div>
+         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Duration</span>
+            <span>${booking.duration}</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Transfer type</span>
