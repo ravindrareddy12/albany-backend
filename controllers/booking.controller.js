@@ -337,7 +337,11 @@ const html = `
             <span>${user.name}</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Email ID  </span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Name</span>
+            <span>${user._id}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Email Adress  </span>
             <span><a href="mailto:${
               user.email
             }" style="color: #007bff;">${
