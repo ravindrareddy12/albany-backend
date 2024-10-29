@@ -226,20 +226,20 @@ const sendAdminBookingNotification = async (booking, carName, guestUser) => {
     const subject = "New Booking Created";
     const text = `A new booking has been created. Here are the details:
 
-Booking ID: ${booking._id}
-Car: ${carName}
-Pickup Location: ${booking.pickupLocation}
-Drop Location: ${booking.dropLocation}
-Pickup Time: ${booking.pickupDateTime} 
-Status: ${booking.status}
-Payment Status: ${booking.paymentStatus}
+        Booking ID: ${booking._id}
+        Car: ${carName}
+        Pickup Location: ${booking.pickupLocation}
+        Drop Location: ${booking.dropLocation}
+        Pickup Time: ${booking.pickupDateTime} 
+        Status: ${booking.status}
+        Payment Status: ${booking.paymentStatus}
 
-Guest Details:
-Name: ${guestUser.name}
-Email: ${guestUser.email}
-Phone: ${guestUser.phone}
+        Guest Details:
+        Name: ${guestUser.name}
+        Email: ${guestUser.email}
+        Phone: ${guestUser.phone}
 
-Please review the booking details in the admin panel.`;
+        Please review the booking details in the admin panel.`;
 
     const html = `
       <div style="font-family: Arial, sans-serif; color: #333;">
@@ -298,7 +298,7 @@ Please review the booking details in the admin panel.`;
           </tr>
         </table>
 
-        <p>Please review the booking details in the admin panel.</p>
+        <p>Please review the booking details in the <a href="https://albanynytaxiservice.com/admin">admin</a> panel.</p>
       </div>`;
 
     // Send email to each admin
