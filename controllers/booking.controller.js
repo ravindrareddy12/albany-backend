@@ -452,6 +452,10 @@ const sendAdminBookingNotification = async (booking, carName, guestUser) => {
           <tr>
             <td colspan="2" style="border-bottom: 2px solid #ddd; padding-bottom: 8px;"><strong> User Details</strong></td>
           </tr>
+            <tr>
+            <td style="padding: 8px; color: #555;">Client ID:</td>
+            <td style="padding: 8px;">${guestUser._id}</td>
+          </tr>
           <tr>
             <td style="padding: 8px; color: #555;">Name:</td>
             <td style="padding: 8px;">${guestUser.name}</td>
@@ -551,25 +555,9 @@ exports.getBookingsByUserId = async (req, res) => {
 
 // Get all bookings with pagination
 exports.getAllBookings = async (req, res) => {
-  const {
-    page = 1,
-    limit = 10,
-    sortBy = "createdAt",
-    order = "asc",
-  } = req.query; // Default values if not provided
+  const { sortBy = "createdAt", order = "asc" } = req.query; // Default values if not provided
 
   try {
-    // Parse and validate page and limit values
-    const pageNumber = parseInt(page, 10);
-    const limitNumber = parseInt(limit, 10);
-
-    if (isNaN(pageNumber) || pageNumber <= 0) {
-      return res.status(400).json({ error: "Invalid page number" });
-    }
-    if (isNaN(limitNumber) || limitNumber <= 0) {
-      return res.status(400).json({ error: "Invalid limit number" });
-    }
-
     // Validate sortBy and order values
     const validSortFields = ["createdAt"];
     const validOrderValues = ["asc", "desc"];
@@ -581,29 +569,22 @@ exports.getAllBookings = async (req, res) => {
       return res.status(400).json({ error: "Invalid order value" });
     }
 
-    // Retrieve bookings with pagination and sorting
+    // Retrieve all bookings with sorting
     const bookings = await Booking.find()
       .populate("userId", "name email")
       .populate("guestUserId", "name email phone")
       .populate("carId", "name perKmPrice perDayPrice model carImage")
       .sort({ [sortBy]: order === "asc" ? 1 : -1 }) // Sort results
-      .limit(limitNumber) // Limit the number of results per page
-      .skip((pageNumber - 1) * limitNumber) // Skip results based on the current page
       .exec();
 
-    // Count total bookings for pagination calculation
-    const count = await Booking.countDocuments();
-
-    res.send({
-      bookings,
-      totalPages: Math.ceil(count / limitNumber),
-      currentPage: pageNumber,
-    });
+    // Send the results without pagination
+    res.send({ bookings });
   } catch (error) {
     console.error(error);
     res.status(400).json({ error: "Failed to retrieve bookings" });
   }
 };
+
 
 // Update booking status by booking ID
 exports.updateBookingStatus = async (req, res) => {
