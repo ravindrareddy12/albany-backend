@@ -531,17 +531,14 @@ exports.getBookingsByUserId = async (req, res) => {
       .populate("userId", "name email")
       .populate("guestUserId", "name email phone")
       .populate("carId", "name perKmPrice perDayPrice model")
-      .limit(limitNumber)
-      .skip((pageNumber - 1) * limitNumber)
       .exec();
 
     // Get total count of bookings
     const count = await Booking.countDocuments({ guestUserId: guestUser._id });
-
+    console.log(bookings)
     // Return bookings and pagination info
     res.status(200).send({
       bookings,
-      totalPages: Math.ceil(count / limitNumber),
       currentPage: pageNumber,
     });
   } catch (error) {
@@ -577,7 +574,7 @@ exports.getAllBookings = async (req, res) => {
       .sort({ [sortBy]: order === "asc" ? 1 : -1 }) // Sort results 
       .exec();
 
-      console.log(bookings)
+    
     // Send the results without pagination
     res.send({ bookings });
   } catch (error) {
