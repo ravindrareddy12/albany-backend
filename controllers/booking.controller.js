@@ -574,9 +574,10 @@ exports.getAllBookings = async (req, res) => {
       .populate("userId", "name email")
       .populate("guestUserId", "name email phone")
       .populate("carId", "name perKmPrice perDayPrice model carImage")
-      .sort({ [sortBy]: order === "asc" ? 1 : -1 }) // Sort results
+      .sort({ [sortBy]: order === "asc" ? 1 : -1 }) // Sort results 
       .exec();
 
+      console.log(bookings)
     // Send the results without pagination
     res.send({ bookings });
   } catch (error) {
@@ -618,7 +619,7 @@ exports.updateBookingStatus = async (req, res) => {
     const user = updatedBooking.userId || updatedBooking.guestUserId;
     const email = user.email;
     const subject = "Booking Status Updated";
-    const text = `Dear ${user.name},\n\nYour booking status has been updated to: ${status} comment : ${comment}.\n\nBest regards,\n Express Transportation`;
+    const text = `Dear ${user.name},\n\nYour booking status has been updated to: ${status} comment : ${comment ? comment : ''}.\n\nBest regards,\n Express Transportation`;
 
     await main(email, subject, text);
   } catch (error) {

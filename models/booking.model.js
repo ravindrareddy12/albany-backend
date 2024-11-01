@@ -16,6 +16,6 @@ const BookingSchema = new Schema({
     comment:{type:String},
     distance:{type:String},
     duration:{type:String}
-});
+},{ timestamps: true });
 
 module.exports = mongoose.model('Booking', BookingSchema);  
