@@ -25,7 +25,7 @@ exports.createBooking = async (req, res) => {
     paymentStatus,
     guestUserId,
     distance,
-    duration
+    duration,
   } = req.body;
 
   let guestUser;
@@ -42,7 +42,7 @@ exports.createBooking = async (req, res) => {
       dropDateTime,
       paymentStatus,
       distance,
-      duration
+      duration,
     };
 
     // Check if guest user information is provided
@@ -244,15 +244,15 @@ We will notify you once your booking status is updated.
 Best regards,
 Express Transportation`;
 
-const html = `
+  const html = `
 <div style="width: 100%; max-width: 600px; margin: auto; background-color: #fff; padding: 20px; border: 1px solid #e0e0e0; font-family: Times New Roman, Times, serif; color: #333;">
     <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">General</h2>
     <div style="padding: 10px 0;">
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;"> Reservation Number </span>
-            <span><a href="#" style="color: #007bff; text-decoration: none;">${
-              booking._id.toString().slice(-5)
-            }</a></span>
+            <span><a href="#" style="color: #007bff; text-decoration: none;">${booking._id
+              .toString()
+              .slice(-5)}</a></span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Booking form name</span>
@@ -342,17 +342,13 @@ const html = `
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Email Adress  </span>
-            <span><a href="mailto:${
-              user.email
-            }" style="color: #007bff;">${
+            <span><a href="mailto:${user.email}" style="color: #007bff;">${
     user.email
   }</a></span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Contact Number</span>
-            <span><a href="tel:${
-              user.phone
-            }" style="color: #007bff;">${
+            <span><a href="tel:${user.phone}" style="color: #007bff;">${
     user.phone
   }</a></span>
         </div>
@@ -367,7 +363,6 @@ const html = `
     </div>
 </div>
 `;
-
 
   try {
     await main(email, subject, text, html);
@@ -535,11 +530,10 @@ exports.getBookingsByUserId = async (req, res) => {
 
     // Get total count of bookings
     const count = await Booking.countDocuments({ guestUserId: guestUser._id });
-    console.log(bookings)
+    console.log(bookings);
     // Return bookings and pagination info
     res.status(200).send({
       bookings,
-      currentPage: pageNumber,
     });
   } catch (error) {
     console.error("Error fetching bookings:", error);
@@ -571,10 +565,9 @@ exports.getAllBookings = async (req, res) => {
       .populate("userId", "name email")
       .populate("guestUserId", "name email phone")
       .populate("carId", "name perKmPrice perDayPrice model carImage")
-      .sort({ [sortBy]: order === "asc" ? 1 : -1 }) // Sort results 
+      .sort({ [sortBy]: order === "asc" ? 1 : -1 }) // Sort results
       .exec();
 
-    
     // Send the results without pagination
     res.send({ bookings });
   } catch (error) {
@@ -582,7 +575,6 @@ exports.getAllBookings = async (req, res) => {
     res.status(400).json({ error: "Failed to retrieve bookings" });
   }
 };
-
 
 // Update booking status by booking ID
 exports.updateBookingStatus = async (req, res) => {
@@ -616,9 +608,81 @@ exports.updateBookingStatus = async (req, res) => {
     const user = updatedBooking.userId || updatedBooking.guestUserId;
     const email = user.email;
     const subject = "Booking Status Updated";
-    const text = `Dear ${user.name},\n\nYour booking status has been updated to: ${status} comment : ${comment ? comment : ''}.\n\nBest regards,\n Express Transportation`;
-
-    await main(email, subject, text);
+    const text = `Dear ${
+      user.name
+    },\n\nYour booking status has been updated to: ${status} comment : ${
+      comment ? comment : ""
+    }.\n\nBest regards,\n Express Transportation`;
+    const statusText = 
+    status === 'accepted' ? 'Confirmed' :
+    status === 'completed' ? 'Completed' : 
+    'Rejected';
+  
+  const bgColor = 
+    status === 'accepted' ? '#2babbf' : // teal for accepted
+    status === 'completed' ? '#4CAF50' : // green for completed
+    '#f44336'; // red for rejected
+    const progressSteps = {
+      pending: 1,
+      accepted: 2,
+      completed: 3,
+      rejected: 0,
+    };
+    
+    const currentStep = progressSteps[status] || 0;
+    const html = `
+    <div style="max-width: 600px; margin: auto; font-family: 'Times New Roman', Times, serif;">
+      <div style="background-color: ${bgColor}; padding: 20px; text-align: center; color: white; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+        <h2 style="margin: 0;">Your Ride has been ${statusText}</h2>
+      </div>
+      <div style="padding: 20px; border: 1px solid #ddd; border-top: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; background-color: #f5f5f5;">
+        <p style="font-size: 16px;">Hi ${user.name},</p>
+        <p style="font-size: 16px;">Your booking status has been updated:</p>
+  
+        <!-- Progress Bar -->
+        <div style="display: flex; justify-content: space-between; margin: 20px 0;">
+          <div style="flex: 1; padding: 5px;">
+            <div style="text-align: center; color: ${currentStep >= 1 ? '#4CAF50' : '#ddd'};">Pending</div>
+            <div style="height: 5px; background-color: ${currentStep >= 1 ? '#4CAF50' : '#ddd'}; margin-top: 5px;"></div>
+          </div>
+          <div style="flex: 1; padding: 5px;">
+            <div style="text-align: center; color: ${currentStep >= 2 ? '#4CAF50' : '#ddd'};">Accepted</div>
+            <div style="height: 5px; background-color: ${currentStep >= 2 ? '#4CAF50' : '#ddd'}; margin-top: 5px;"></div>
+          </div>
+          <div style="flex: 1; padding: 5px;">
+            <div style="text-align: center; color: ${currentStep >= 3 ? '#4CAF50' : '#ddd'};">Completed</div>
+            <div style="height: 5px; background-color: ${currentStep >= 3 ? '#4CAF50' : '#ddd'}; margin-top: 5px;"></div>
+          </div>
+        </div>
+  
+        <div style="border: 1px solid #ddd; padding: 15px; background-color: #ffffff; border-radius: 8px;">
+          <h3 style="margin-top: 0; font-size: 18px; color: #333;">Booking Details:</h3>
+          <p style="margin: 5px 0;"><strong>Reservation Number:</strong> ${updatedBooking._id.toString().slice(-5)}</p>
+          <p style="margin: 5px 0;"><strong>Status:</strong> ${status}</p>
+          <p style="margin: 5px 0;"><strong>Pickup Date Time:</strong> ${updatedBooking.pickupDateTime}</p>
+          <p style="margin: 5px 0;">
+            <strong>Pickup Location:</strong>
+            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(updatedBooking.pickupLocation)}" 
+               target="_blank" style="color: #2babbf; text-decoration: none;">${updatedBooking.pickupLocation}</a>
+          </p>
+          <p style="margin: 5px 0;">
+            <strong>Drop Location:</strong>
+            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(updatedBooking.dropLocation)}" 
+               target="_blank" style="color: #2babbf; text-decoration: none;">${updatedBooking.dropLocation}</a>
+          </p>
+          <p style="margin: 5px 0;"><strong>Distance:</strong> ${updatedBooking.distance}</p>
+          <p style="margin: 5px 0;"><strong>Duration:</strong> ${updatedBooking.duration}</p>
+          <p style="margin: 5px 0;"><strong>Comment:</strong> ${comment ? comment : "None"}</p>
+          <p style="margin: 5px 0;"><strong>Total Fare:</strong> $${updatedBooking.fare}</p>
+          <p style="margin: 5px 0;"><strong>Payment Status:</strong> ${updatedBooking.paymentStatus ? updatedBooking.paymentStatus : "Pending"}</p>
+        </div>
+        <p style="font-size: 14px; color: #555; margin-top: 15px;">Thank you for choosing Express Transportation.</p>
+        <p style="font-size: 12px; color: #888; text-align: center; margin-top: 20px;">Please do not reply to this email.</p>
+      </div>
+    </div>
+  `;
+  
+    await main(email, subject, text, html);
   } catch (error) {
     console.log(error);
     console.error("Error updating booking status:", error.message);
