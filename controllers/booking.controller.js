@@ -249,7 +249,7 @@ Express Transportation`;
     <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">General</h2>
     <div style="padding: 10px 0;">
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
-            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;"> Reservation Number </span>
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;"> RESERVATION NUMBER </span>
             <span><a href="#" style="color: #007bff; text-decoration: none;">${booking._id
               .toString()
               .slice(-5)}</a></span>
@@ -280,7 +280,7 @@ Express Transportation`;
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Pickup date and time</span>
-            <span>${booking.pickupDateTime}</span>
+            <span>${formatDateTimeTo12Hour(booking.pickupDateTime)}</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Order total amount</span>
@@ -414,7 +414,7 @@ const sendAdminBookingNotification = async (booking, carName, guestUser) => {
             <td colspan="2" style="border-bottom: 2px solid #ddd; padding-bottom: 8px;"><strong>Booking Details</strong></td>
           </tr>
           <tr>
-            <td style="padding: 8px; width: 30%; color: #555;">Booking ID:</td>
+            <td style="padding: 8px; width: 30%; color: #555;">RESERVATION NUMBER:</td>
             <td style="padding: 8px;">${booking._id}</td>
           </tr>
           <tr>
@@ -431,7 +431,7 @@ const sendAdminBookingNotification = async (booking, carName, guestUser) => {
           </tr>
           <tr>
             <td style="padding: 8px; color: #555;">Pickup Time:</td>
-            <td style="padding: 8px;">${booking.pickupDateTime}</td>
+            <td style="padding: 8px;">${formatDateTimeTo12Hour(booking.pickupDateTime)}</td>
           </tr>
           <tr>
             <td style="padding: 8px; color: #555;">Status:</td>
@@ -657,9 +657,9 @@ exports.updateBookingStatus = async (req, res) => {
   
         <div style="border: 1px solid #ddd; padding: 15px; background-color: #ffffff; border-radius: 8px;">
           <h3 style="margin-top: 0; font-size: 18px; color: #333;">Booking Details:</h3>
-          <p style="margin: 5px 0;"><strong>Reservation Number:</strong> ${updatedBooking._id.toString().slice(-5)}</p>
+          <p style="margin: 5px 0;"><strong>RESERVATION NUMBER:</strong> ${updatedBooking._id.toString().slice(-5)}</p>
           <p style="margin: 5px 0;"><strong>Status:</strong> ${status}</p>
-          <p style="margin: 5px 0;"><strong>Pickup Date Time:</strong> ${updatedBooking.pickupDateTime}</p>
+          <p style="margin: 5px 0;"><strong>Pickup Date Time:</strong> ${formatDateTimeTo12Hour(updatedBooking.pickupDateTime)}</p>
           <p style="margin: 5px 0;">
             <strong>Pickup Location:</strong>
             <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(updatedBooking.pickupLocation)}" 
@@ -731,3 +731,20 @@ exports.getBookingsByPickupDate = async (req, res) => {
     res.status(400).json({ error: "Failed to retrieve bookings" });
   }
 };
+
+function formatDateTimeTo12Hour(dateTimeString) {
+  const date = new Date(dateTimeString);
+
+  const options = {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+      hour: 'numeric',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+  };
+
+  return date.toLocaleString('en-US', options);
+}

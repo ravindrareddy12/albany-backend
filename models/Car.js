@@ -11,6 +11,12 @@ const carSchema = new Schema({
     perKmPrice: { type: Number, required: true },
     passengers: { type: Number },
     status: { type: String, enum: ['Available', 'Unavailable'], default: 'Available' },
+    Deliveryfee:{ type: Number },
+    Priceperhour:{ type: Number },
+    Priceperextratime:{ type: Number },
+    Priceperwaypointduration:{ type: Number },
+    Stripeflatfee:{ type: Number },
+    Stripepercentagefee:{ type: Number },
     createdAt: { type: Date, default: Date.now }
 });
 
