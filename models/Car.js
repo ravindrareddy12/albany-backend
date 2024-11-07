@@ -16,8 +16,10 @@ const carSchema = new Schema({
     Priceperextratime:{ type: Number },
     Priceperwaypointduration:{ type: Number },
     Stripeflatfee:{ type: Number },
+    freeDeliveryUnder : {type:Number},
     Stripepercentagefee:{ type: Number },
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+
 });
 
 module.exports = mongoose.model('Car', carSchema);

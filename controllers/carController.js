@@ -29,11 +29,12 @@ exports.createCar = async (req, res) => {
       Priceperwaypointduration,
       Stripeflatfee,
       Stripepercentagefee,
-    } = req.body;
+        
+    } = req.body; 
 
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
-    }
+    } 
 
     const filePath = req.file.path;
 
@@ -55,6 +56,7 @@ exports.createCar = async (req, res) => {
         Priceperwaypointduration,
         Stripeflatfee,
         Stripepercentagefee,
+        freeDeliveryUnder
       });
       console.log("cras", car);
       console.log(result, "result");
@@ -140,6 +142,7 @@ exports.updateCar = async (req, res) => {
       Priceperwaypointduration,
       Stripeflatfee,
       Stripepercentagefee,
+      freeDeliveryUnder
     } = req.body;
     let updateData = {
       carName,
@@ -154,7 +157,8 @@ exports.updateCar = async (req, res) => {
       Priceperwaypointduration,
       Stripeflatfee,
       Stripepercentagefee,
-      passengers
+      passengers,
+      freeDeliveryUnder
     };
 
     if (req.file) {
