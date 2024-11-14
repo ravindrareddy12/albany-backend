@@ -248,9 +248,6 @@ Express Transportation`;
 
   const html = `
 <div style="width: 100%; max-width: 600px; margin: auto; background-color: #fff; padding: 20px; border: 1px solid #e0e0e0; font-family: Times New Roman, Times, serif; color: #333;">
-<div style="text-align: center; margin-bottom: 20px;">
-      <img src="https://albanynytaxiservice.com/Express-01.webp" alt="ZS Transit Inc Logo" style="max-width: 150px; height: 150px;">
-    </div>
     <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">General</h2>
     <div style="padding: 10px 0;">
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
@@ -411,9 +408,6 @@ const sendAdminBookingNotification = async (booking, carName, guestUser) => {
 
     const html = `
       <div style="font-family: Arial, sans-serif; color: #333;">
-      <div style="text-align: center; margin-bottom: 20px;">
-      <img src="https://albanynytaxiservice.com/Express-01.webp" alt="ZS Transit Inc Logo" style="max-width: 150px; height: 150px;">
-    </div>
         <h2 style="color: #DC143C;">New Booking Notification</h2>
         <p>A new booking has been created. Here are the details:</p>
 
@@ -490,6 +484,9 @@ const sendAdminBookingNotification = async (booking, carName, guestUser) => {
   }
 };
 
+{/* <div style="text-align: center; margin-bottom: 20px;">
+<img src="https://albanynytaxiservice.com/Express-01.webp" alt="albanynytaxiservice Logo" style="max-width:auto; height: auto;">
+</div> */}
 // Get booking details by booking ID
 exports.getBookingDetails = async (req, res) => {
   const { page = 1, limit = 10 } = req.query; // Default values if not provided
