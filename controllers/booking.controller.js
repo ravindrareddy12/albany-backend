@@ -280,7 +280,7 @@ Express Transportation`;
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Pickup date and time</span>
-            <span>${formatDateTimeTo12Hour(booking.pickupDateTime)}</span>
+            <span>${booking.pickupDateTime}</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Order total amount</span>
@@ -431,7 +431,7 @@ const sendAdminBookingNotification = async (booking, carName, guestUser) => {
           </tr>
           <tr>
             <td style="padding: 8px; color: #555;">Pickup Time:</td>
-            <td style="padding: 8px;">${formatDateTimeTo12Hour(booking.pickupDateTime)}</td>
+            <td style="padding: 8px;">${booking.pickupDateTime}</td>
           </tr>
           <tr>
             <td style="padding: 8px; color: #555;">Status:</td>
@@ -659,7 +659,7 @@ exports.updateBookingStatus = async (req, res) => {
           <h3 style="margin-top: 0; font-size: 18px; color: #333;">Booking Details:</h3>
           <p style="margin: 5px 0;"><strong>RESERVATION NUMBER:</strong> ${updatedBooking._id.toString().slice(-5)}</p>
           <p style="margin: 5px 0;"><strong>Status:</strong> ${status}</p>
-          <p style="margin: 5px 0;"><strong>Pickup Date Time:</strong> ${formatDateTimeTo12Hour(updatedBooking.pickupDateTime)}</p>
+          <p style="margin: 5px 0;"><strong>Pickup Date Time:</strong> ${updatedBooking.pickupDateTime}</p>
           <p style="margin: 5px 0;">
             <strong>Pickup Location:</strong>
             <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(updatedBooking.pickupLocation)}" 
