@@ -15,7 +15,8 @@ const BookingSchema = new Schema({
     paymentStatus:{type:String},
     comment:{type:String},
     distance:{type:String},
-    duration:{type:String}
+    duration:{type:String},
+    routes :{type:Array}
 },{ timestamps: true });
 
 module.exports = mongoose.model('Booking', BookingSchema);  

@@ -26,6 +26,7 @@ exports.createBooking = async (req, res) => {
     guestUserId,
     distance,
     duration,
+    routes,
   } = req.body;
 
   let guestUser;
@@ -43,6 +44,7 @@ exports.createBooking = async (req, res) => {
       paymentStatus,
       distance,
       duration,
+      routes,
     };
 
     // Check if guest user information is provided
@@ -294,8 +296,8 @@ Express Transportation`;
 
     <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">Route Locations</h2>
     <div style="padding: 10px 0;">
-    ${[booking.pickupLocation, booking.dropLocation]
-      .map(
+    ${booking.routes
+      ?.map(
         (location, index) => `
       <div style="display: flex; font-size: 14px;">
           <span style="color: #666; font-weight: bold;">
@@ -431,7 +433,7 @@ const sendAdminBookingNotification = async (booking, carName, guestUser) => {
           </tr>
           <tr>
             <td style="padding: 8px; color: #555;">Pickup Time:</td>
-            <td style="padding: 8px;">${booking.pickupDateTime}</td>
+            <td style="padding: 8px;">${formatDateTimeTo12Hour(booking.pickupDateTime)}</td>
           </tr>
           <tr>
             <td style="padding: 8px; color: #555;">Status:</td>
@@ -480,6 +482,9 @@ const sendAdminBookingNotification = async (booking, carName, guestUser) => {
   }
 };
 
+{/* <div style="text-align: center; margin-bottom: 20px;">
+<img src="https://albanynytaxiservice.com/Express-01.webp" alt="albanynytaxiservice Logo" style="max-width:auto; height: auto;">
+</div> */}
 // Get booking details by booking ID
 exports.getBookingDetails = async (req, res) => {
   const { page = 1, limit = 10 } = req.query; // Default values if not provided
@@ -613,22 +618,26 @@ exports.updateBookingStatus = async (req, res) => {
     },\n\nYour booking status has been updated to: ${status} comment : ${
       comment ? comment : ""
     }.\n\nBest regards,\n Express Transportation`;
-    const statusText = 
-    status === 'accepted' ? 'Confirmed' :
-    status === 'completed' ? 'Completed' : 
-    'Rejected';
-  
-  const bgColor = 
-    status === 'accepted' ? '#2babbf' : // teal for accepted
-    status === 'completed' ? '#4CAF50' : // green for completed
-    '#f44336'; // red for rejected
+    const statusText =
+      status === "accepted"
+        ? "Confirmed"
+        : status === "completed"
+        ? "Completed"
+        : "Rejected";
+
+    const bgColor =
+      status === "accepted"
+        ? "#2babbf" // teal for accepted
+        : status === "completed"
+        ? "#4CAF50" // green for completed
+        : "#f44336"; // red for rejected
     const progressSteps = {
       pending: 1,
       accepted: 2,
       completed: 3,
       rejected: 0,
     };
-    
+
     const currentStep = progressSteps[status] || 0;
     const html = `
     <div style="max-width: 600px; margin: auto; font-family: 'Times New Roman', Times, serif;">
@@ -642,46 +651,80 @@ exports.updateBookingStatus = async (req, res) => {
         <!-- Progress Bar -->
         <div style="display: flex; justify-content: space-between; margin: 20px 0;">
           <div style="flex: 1; padding: 5px;">
-            <div style="text-align: center; color: ${currentStep >= 1 ? '#4CAF50' : '#ddd'};">Pending</div>
-            <div style="height: 5px; background-color: ${currentStep >= 1 ? '#4CAF50' : '#ddd'}; margin-top: 5px;"></div>
+            <div style="text-align: center; color: ${
+              currentStep >= 1 ? "#4CAF50" : "#ddd"
+            };">Pending</div>
+            <div style="height: 5px; background-color: ${
+              currentStep >= 1 ? "#4CAF50" : "#ddd"
+            }; margin-top: 5px;"></div>
           </div>
           <div style="flex: 1; padding: 5px;">
-            <div style="text-align: center; color: ${currentStep >= 2 ? '#4CAF50' : '#ddd'};">Accepted</div>
-            <div style="height: 5px; background-color: ${currentStep >= 2 ? '#4CAF50' : '#ddd'}; margin-top: 5px;"></div>
+            <div style="text-align: center; color: ${
+              currentStep >= 2 ? "#4CAF50" : "#ddd"
+            };">Accepted</div>
+            <div style="height: 5px; background-color: ${
+              currentStep >= 2 ? "#4CAF50" : "#ddd"
+            }; margin-top: 5px;"></div>
           </div>
           <div style="flex: 1; padding: 5px;">
-            <div style="text-align: center; color: ${currentStep >= 3 ? '#4CAF50' : '#ddd'};">Completed</div>
-            <div style="height: 5px; background-color: ${currentStep >= 3 ? '#4CAF50' : '#ddd'}; margin-top: 5px;"></div>
+            <div style="text-align: center; color: ${
+              currentStep >= 3 ? "#4CAF50" : "#ddd"
+            };">Completed</div>
+            <div style="height: 5px; background-color: ${
+              currentStep >= 3 ? "#4CAF50" : "#ddd"
+            }; margin-top: 5px;"></div>
           </div>
         </div>
   
         <div style="border: 1px solid #ddd; padding: 15px; background-color: #ffffff; border-radius: 8px;">
           <h3 style="margin-top: 0; font-size: 18px; color: #333;">Booking Details:</h3>
-          <p style="margin: 5px 0;"><strong>RESERVATION NUMBER:</strong> ${updatedBooking._id.toString().slice(-5)}</p>
+          <p style="margin: 5px 0;"><strong>RESERVATION NUMBER:</strong> ${updatedBooking._id
+            .toString()
+            .slice(-5)}</p>
           <p style="margin: 5px 0;"><strong>Status:</strong> ${status}</p>
-          <p style="margin: 5px 0;"><strong>Pickup Date Time:</strong> ${updatedBooking.pickupDateTime}</p>
+          <p style="margin: 5px 0;"><strong>Pickup Date Time:</strong> ${formatDateTimeTo12Hour(updatedBooking.pickupDateTime)}</p>
           <p style="margin: 5px 0;">
             <strong>Pickup Location:</strong>
-            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(updatedBooking.pickupLocation)}" 
-               target="_blank" style="color: #2babbf; text-decoration: none;">${updatedBooking.pickupLocation}</a>
+            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+              updatedBooking.pickupLocation
+            )}" 
+               target="_blank" style="color: #2babbf; text-decoration: none;">${
+                 updatedBooking.pickupLocation
+               }</a>
           </p>
           <p style="margin: 5px 0;">
             <strong>Drop Location:</strong>
-            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(updatedBooking.dropLocation)}" 
-               target="_blank" style="color: #2babbf; text-decoration: none;">${updatedBooking.dropLocation}</a>
+            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+              updatedBooking.dropLocation
+            )}" 
+               target="_blank" style="color: #2babbf; text-decoration: none;">${
+                 updatedBooking.dropLocation
+               }</a>
           </p>
-          <p style="margin: 5px 0;"><strong>Distance:</strong> ${updatedBooking.distance}</p>
-          <p style="margin: 5px 0;"><strong>Duration:</strong> ${updatedBooking.duration}</p>
-          <p style="margin: 5px 0;"><strong>Comment:</strong> ${comment ? comment : "None"}</p>
-          <p style="margin: 5px 0;"><strong>Total Fare:</strong> $${updatedBooking.fare}</p>
-          <p style="margin: 5px 0;"><strong>Payment Status:</strong> ${updatedBooking.paymentStatus ? updatedBooking.paymentStatus : "Pending"}</p>
+          <p style="margin: 5px 0;"><strong>Distance:</strong> ${
+            updatedBooking.distance
+          }</p>
+          <p style="margin: 5px 0;"><strong>Duration:</strong> ${
+            updatedBooking.duration
+          }</p>
+          <p style="margin: 5px 0;"><strong>Comment:</strong> ${
+            comment ? comment : "None"
+          }</p>
+          <p style="margin: 5px 0;"><strong>Total Fare:</strong> $${
+            updatedBooking.fare
+          }</p>
+          <p style="margin: 5px 0;"><strong>Payment Status:</strong> ${
+            updatedBooking.paymentStatus
+              ? updatedBooking.paymentStatus
+              : "Pending"
+          }</p>
         </div>
         <p style="font-size: 14px; color: #555; margin-top: 15px;">Thank you for choosing Express Transportation.</p>
         <p style="font-size: 12px; color: #888; text-align: center; margin-top: 20px;">Please do not reply to this email.</p>
       </div>
     </div>
   `;
-  
+
     await main(email, subject, text, html);
   } catch (error) {
     console.log(error);
@@ -736,15 +779,15 @@ function formatDateTimeTo12Hour(dateTimeString) {
   const date = new Date(dateTimeString);
 
   const options = {
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
-      day: '2-digit',
-      hour: 'numeric',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: true
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
   };
 
-  return date.toLocaleString('en-US', options);
+  return date.toLocaleString("en-US", options);
 }
