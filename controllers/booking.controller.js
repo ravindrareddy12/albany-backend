@@ -433,7 +433,9 @@ const sendAdminBookingNotification = async (booking, carName, guestUser) => {
           </tr>
           <tr>
             <td style="padding: 8px; color: #555;">Pickup Time:</td>
-            <td style="padding: 8px;">${formatDateTimeTo12Hour(booking.pickupDateTime)}</td>
+            <td style="padding: 8px;">${
+              booking.pickupDateTime
+            }</td>
           </tr>
           <tr>
             <td style="padding: 8px; color: #555;">Status:</td>
@@ -682,7 +684,9 @@ exports.updateBookingStatus = async (req, res) => {
             .toString()
             .slice(-5)}</p>
           <p style="margin: 5px 0;"><strong>Status:</strong> ${status}</p>
-          <p style="margin: 5px 0;"><strong>Pickup Date Time:</strong> ${formatDateTimeTo12Hour(updatedBooking.pickupDateTime)}</p>
+          <p style="margin: 5px 0;"><strong>Pickup Date Time:</strong> ${
+            updatedBooking.pickupDateTime
+          }</p>
           <p style="margin: 5px 0;">
             <strong>Pickup Location:</strong>
             <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
