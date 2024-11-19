@@ -27,6 +27,8 @@ exports.createBooking = async (req, res) => {
     distance,
     duration,
     routes,
+    extraHours,
+    instructions
   } = req.body;
 
   let guestUser;
@@ -45,6 +47,8 @@ exports.createBooking = async (req, res) => {
       distance,
       duration,
       routes,
+      extraHours,
+      instructions
     };
 
     // Check if guest user information is provided
@@ -273,6 +277,14 @@ Express Transportation`;
             <span>${booking.distance} Miles</span>
         </div>
          <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Extra Hour(s)</span>
+            <span>${booking.extraHours} Hour(s)</span>
+        </div>
+         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Any instructions to driver </span>
+            <span> ${booking?.instructions?.length > 0 ? booking.instructions : 'NA'} </span>
+        </div>
+         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Duration</span>
             <span>${booking.duration}</span>
         </div>
@@ -430,6 +442,14 @@ const sendAdminBookingNotification = async (booking, carName, guestUser) => {
           <tr>
             <td style="padding: 8px; color: #555;">Drop Location:</td>
             <td style="padding: 8px;">${booking.dropLocation}</td>
+          </tr>
+           <tr>
+            <td style="padding: 8px; color: #555;">Extra Hour(s): </td>
+            <td style="padding: 8px;">${booking.extraHours} Hour(s)</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; color: #555;">Any instructions to driver: </td>
+            <td style="padding: 8px;">${booking?.instructions?.length > 0 ? booking.instructions : 'NA'}</td>
           </tr>
           <tr>
             <td style="padding: 8px; color: #555;">Pickup Time:</td>
@@ -680,44 +700,48 @@ exports.updateBookingStatus = async (req, res) => {
   
         <div style="border: 1px solid #ddd; padding: 15px; background-color: #ffffff; border-radius: 8px;">
           <h3 style="margin-top: 0; font-size: 18px; color: #333;">Booking Details:</h3>
-          <p style="margin: 5px 0;"><strong>RESERVATION NUMBER:</strong> ${updatedBooking._id
+          <p style="margin: 5px 0;color: #333"><strong>RESERVATION NUMBER:</strong> ${updatedBooking._id
             .toString()
             .slice(-5)}</p>
-          <p style="margin: 5px 0;"><strong>Status:</strong> ${status}</p>
-          <p style="margin: 5px 0;"><strong>Pickup Date Time:</strong> ${
+          <p style="margin: 5px 0;color: #333;"><strong>Status:</strong> ${status}</p>
+          <p style="margin: 5px 0;color: #333;"><strong>Pickup Date Time:</strong> ${
             updatedBooking.pickupDateTime
           }</p>
           <p style="margin: 5px 0;">
-            <strong>Pickup Location:</strong>
+            <strong style="color: #333">Pickup Location:</strong>
             <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
               updatedBooking.pickupLocation
             )}" 
-               target="_blank" style="color: #2babbf; text-decoration: none;">${
+               target="_blank" style="color: #333; text-decoration: none;">${
                  updatedBooking.pickupLocation
                }</a>
           </p>
           <p style="margin: 5px 0;">
-            <strong>Drop Location:</strong>
+            <strong style="color: #333">Drop Location:</strong>
             <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
               updatedBooking.dropLocation
             )}" 
-               target="_blank" style="color: #2babbf; text-decoration: none;">${
+               target="_blank" style="color: #333; text-decoration: none;">${
                  updatedBooking.dropLocation
                }</a>
           </p>
-          <p style="margin: 5px 0;"><strong>Distance:</strong> ${
+          <p style="margin: 5px 0;color: #333"><strong>Distance:</strong> ${
             updatedBooking.distance
           }</p>
-          <p style="margin: 5px 0;"><strong>Duration:</strong> ${
+          <p style="margin: 5px 0;color: #333"><strong>Duration:</strong> ${
             updatedBooking.duration
           }</p>
-          <p style="margin: 5px 0;"><strong>Comment:</strong> ${
+          <p style="margin: 5px 0;color: #333"><strong>Comment:</strong> ${
             comment ? comment : "None"
           }</p>
-          <p style="margin: 5px 0;"><strong>Total Fare:</strong> $${
+          <p style="margin: 5px 0;color: #333"><strong>Total Fare:</strong> $${
             updatedBooking.fare
           }</p>
-          <p style="margin: 5px 0;"><strong>Payment Status:</strong> ${
+          <p style="margin: 5px 0;color: #333"><strong>Extra Hour(s):</strong> ${
+            updatedBooking.extraHours
+          } Hour(s)</p>
+          <p style="margin: 5px 0;color: #333"><strong>Any instructions to driver: </strong> ${updatedBooking?.instructions?.length > 0 ? updatedBooking.instructions : 'NA'}</p>
+          <p style="margin: 5px 0;color: #333"><strong>Payment Status:</strong> ${
             updatedBooking.paymentStatus
               ? updatedBooking.paymentStatus
               : "Pending"
