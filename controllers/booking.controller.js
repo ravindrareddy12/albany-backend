@@ -135,7 +135,7 @@ const sendBookingDetailsEmail = async (
 Thank you for your booking. Here are the details of your booking:
 
 Booking ID: ${booking._id}
-Car: ${carName}
+Vehicle: ${carName}
 Pickup Location: ${booking.pickupLocation}
 Drop Location: ${booking.dropLocation}
 Pickup Time: ${booking.pickupDateTime} 
@@ -302,7 +302,7 @@ const sendAdminBookingNotification = async (booking, carName, guestUser,name) =>
     const text = `A new booking has been created. Here are the details:
 
         Booking ID: ${booking._id}
-        Car: ${carName}
+        Vehicle: ${carName}
         Pickup Location: ${booking.pickupLocation}
         Drop Location: ${booking.dropLocation}
         Pickup Time: ${booking.pickupDateTime} 
@@ -327,10 +327,11 @@ const sendAdminBookingNotification = async (booking, carName, guestUser,name) =>
           </tr>
           <tr>
             <td style="padding: 8px; width: 30%; color: #555;">RESERVATION NUMBER:</td>
-            <td style="padding: 8px;">${booking._id}</td>
+            <td style="padding: 8px;">${booking._id?.toString()
+            ?.slice(-5)}}</td>
           </tr>
           <tr>
-            <td style="padding: 8px; color: #555;">Car:</td>
+            <td style="padding: 8px; color: #555;">Vehicle:</td>
             <td style="padding: 8px;">${carName}</td>
           </tr>
           <tr>

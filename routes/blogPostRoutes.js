@@ -10,7 +10,7 @@ router.post('/create', blogPostController.createBlogPost);
 router.get('/admin', blogPostController.getAllBlogPosts);
 
 // Route to approve a blog post (for admin)
-router.put('/approve/:id',isAdmin, blogPostController.approveBlogPost);
+router.put('/approve/:id', blogPostController.approveBlogPost);
 
 // Route to get approved blog posts (for users)
 router.get('/approved', blogPostController.getApprovedBlogPosts);
@@ -19,7 +19,7 @@ router.get('/approved', blogPostController.getApprovedBlogPosts);
 router.put('/update/:id',isAdmin, blogPostController.updateBlogPost);
 
 // Route to delete a blog post
-router.delete('/delete/:id',isAdmin, blogPostController.deleteBlogPost);
+router.delete('/delete/:id', blogPostController.deleteBlogPost);
 
 router.get('/:id', blogPostController.getBlogPostById);
 

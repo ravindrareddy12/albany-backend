@@ -29,6 +29,9 @@ const blogPostSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    blogPostedEmail:{
+        type:String
+    },
     updatedAt: {
         type: Date,
         default: Date.now,
