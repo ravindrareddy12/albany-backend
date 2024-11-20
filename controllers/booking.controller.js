@@ -48,7 +48,8 @@ exports.createBooking = async (req, res) => {
       duration,
       routes,
       extraHours,
-      instructions
+      instructions,
+      tempName:name
     };
 
     // Check if guest user information is provided
@@ -98,7 +99,7 @@ exports.createBooking = async (req, res) => {
     );
 
     // Send booking details to admin users
-    await sendAdminBookingNotification(booking, carName, guestUser);
+    await sendAdminBookingNotification(booking, carName, guestUser,name);
 
     // Save the booking to the database
     await booking.save();
@@ -118,110 +119,7 @@ exports.createBooking = async (req, res) => {
   }
 };
 
-// Function to send booking details email to the user
-// const sendBookingDetailsEmail = async (email, name, booking, carName, user) => {
-//   const subject = "Your Booking in Progress";
-//   const text = `Dear ${name},
 
-// Thank you for your booking. Here are the details of your booking:
-
-// Booking ID: ${booking._id}
-// Car: ${carName}
-// Pickup Location: ${booking.pickupLocation}
-// Drop Location: ${booking.dropLocation}
-// Pickup Time: ${booking.pickupDateTime}
-// Drop Time: ${booking.dropDateTime}
-// Status: ${booking.status}
-// Payment Status: ${booking.paymentStatus}
-
-// We will notify you once your booking status is updated.
-
-// Best regards,
-// Express Transportation`;
-
-//   const html = `
-//     <div style="font-family: Arial, sans-serif; color: #333;">
-//       <h2 style="color: #1E90FF;">Booking Confirmation</h2>
-//       <p>Dear ${name},</p>
-//       <p>Thank you for your booking. Here are the details:</p>
-
-//       <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-//         <tr>
-//           <td colspan="2" style="border-bottom: 2px solid #ddd; padding-bottom: 8px;"><strong>General</strong></td>
-//         </tr>
-//         <tr>
-//           <td style="padding: 8px; width: 30%; color: #555;">Booking ID:</td>
-//           <td style="padding: 8px;">${booking._id}</td>
-//         </tr>
-//         <tr>
-//           <td style="padding: 8px; color: #555;">Status:</td>
-//           <td style="padding: 8px;">${booking.status}</td>
-//         </tr>
-//         <tr>
-//           <td style="padding: 8px; color: #555;">Order Total Amount:</td>
-//           <td style="padding: 8px;">$${booking.fare}</td>
-//         </tr>
-//       </table>
-
-//       <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-//         <tr>
-//           <td colspan="2" style="border-bottom: 2px solid #ddd; padding-bottom: 8px;"><strong>Route Locations</strong></td>
-//         </tr>
-//         <tr>
-//           <td style="padding: 8px; color: #555;">Pickup Location:</td>
-//           <td style="padding: 8px;">${booking.pickupLocation}</td>
-//         </tr>
-//         <tr>
-//           <td style="padding: 8px; color: #555;">Drop Location:</td>
-//           <td style="padding: 8px;">${booking.dropLocation}</td>
-//         </tr>
-//       </table>
-
-//       <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-//         <tr>
-//           <td colspan="2" style="border-bottom: 2px solid #ddd; padding-bottom: 8px;"><strong>Vehicle</strong></td>
-//         </tr>
-//         <tr>
-//           <td style="padding: 8px; color: #555;">Car:</td>
-//           <td style="padding: 8px;">${carName}</td>
-//         </tr>
-//         <tr>
-
-//       </table>
-
-//       <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-//         <tr>
-//           <td colspan="2" style="border-bottom: 2px solid #ddd; padding-bottom: 8px;"><strong>Client Details</strong></td>
-//         </tr>
-//         <tr>
-//           <td style="padding: 8px; color: #555;">Name:</td>
-//           <td style="padding: 8px;">${name}</td>
-//         </tr>
-//         <tr>
-//           <td style="padding: 8px; color: #555;">Email:</td>
-//           <td style="padding: 8px;">${user.email}</td>
-//         </tr>
-//         <tr>
-//           <td style="padding: 8px; color: #555;">Phone:</td>
-//           <td style="padding: 8px;">${user.phone}</td>
-//         </tr>
-//       </table>
-
-//       <p>We will notify you once your booking status is updated.</p>
-//       <p>Best regards,<br/>Express Transportation Inc</p>
-//     </div>`;
-
-//   try {
-//     await main(email, subject, text, html);
-//     console.log("Email sent successfully to the user.");
-//   } catch (error) {
-//     console.error(
-//       "Failed to send email:",
-//       error.response ? error.response.body : error.message
-//     );
-//     throw new Error("Failed to send email");
-//   }
-// };
 
 const sendBookingDetailsEmail = async (
   email,
@@ -352,7 +250,7 @@ Express Transportation`;
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Name</span>
-            <span>${user.name}</span>
+            <span>${name}</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Email Adress  </span>
@@ -390,7 +288,7 @@ Express Transportation`;
   }
 };
 // Function to send booking details to admin users
-const sendAdminBookingNotification = async (booking, carName, guestUser) => {
+const sendAdminBookingNotification = async (booking, carName, guestUser,name) => {
   console.log(guestUser);
   try {
     // Find all admin users
@@ -412,7 +310,7 @@ const sendAdminBookingNotification = async (booking, carName, guestUser) => {
         Payment Status: ${booking.paymentStatus}
 
         Guest Details:
-        Name: ${guestUser.name}
+        Name: ${name}
         Email: ${guestUser.email}
         Phone: ${guestUser.phone}
 
@@ -477,7 +375,7 @@ const sendAdminBookingNotification = async (booking, carName, guestUser) => {
           </tr>
           <tr>
             <td style="padding: 8px; color: #555;">Name:</td>
-            <td style="padding: 8px;">${guestUser.name}</td>
+            <td style="padding: 8px;">${name}</td>
           </tr>
           <tr>
             <td style="padding: 8px; color: #555;">Email:</td>
@@ -636,7 +534,7 @@ exports.updateBookingStatus = async (req, res) => {
     const email = user.email;
     const subject = "Booking Status Updated";
     const text = `Dear ${
-      user.name
+      updatedBooking.tempName
     },\n\nYour booking status has been updated to: ${status} comment : ${
       comment ? comment : ""
     }.\n\nBest regards,\n Express Transportation`;
@@ -667,7 +565,7 @@ exports.updateBookingStatus = async (req, res) => {
         <h2 style="margin: 0;">Your Ride has been ${statusText}</h2>
       </div>
       <div style="padding: 20px; border: 1px solid #ddd; border-top: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; background-color: #f5f5f5;">
-        <p style="font-size: 16px;">Hi ${user.name},</p>
+        <p style="font-size: 16px;">Hi ${updatedBooking.tempName},</p>
         <p style="font-size: 16px;">Your booking status has been updated:</p>
   
         <!-- Progress Bar -->

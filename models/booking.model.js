@@ -18,6 +18,7 @@ const BookingSchema = new Schema({
     duration:{type:String},
     extraHours:{type:String},
     instructions:{type:String},
+    tempName:{type:String},
     routes :{type:Array}
 },{ timestamps: true });
 
