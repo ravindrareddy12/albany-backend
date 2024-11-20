@@ -34,6 +34,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
 
+app.use(express.static('public'));
 
 app.use(
   session({

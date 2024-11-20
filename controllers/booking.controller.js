@@ -28,7 +28,7 @@ exports.createBooking = async (req, res) => {
     duration,
     routes,
     extraHours,
-    instructions
+    instructions,
   } = req.body;
 
   let guestUser;
@@ -49,7 +49,7 @@ exports.createBooking = async (req, res) => {
       routes,
       extraHours,
       instructions,
-      tempName:name
+      tempName: name,
     };
 
     // Check if guest user information is provided
@@ -99,7 +99,7 @@ exports.createBooking = async (req, res) => {
     );
 
     // Send booking details to admin users
-    await sendAdminBookingNotification(booking, carName, guestUser,name);
+    await sendAdminBookingNotification(booking, carName, guestUser, name);
 
     // Save the booking to the database
     await booking.save();
@@ -118,8 +118,6 @@ exports.createBooking = async (req, res) => {
     }
   }
 };
-
-
 
 const sendBookingDetailsEmail = async (
   email,
@@ -149,14 +147,17 @@ Best regards,
 Express Transportation`;
 
   const html = `
+   
 <div style="width: 100%; max-width: 600px; margin: auto; background-color: #fff; padding: 20px; border: 1px solid #e0e0e0; font-family: Times New Roman, Times, serif; color: #333;">
+
     <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">General</h2>
     <div style="padding: 10px 0;">
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;"> RESERVATION NUMBER </span>
             <span><a href="#" style="color: #007bff; text-decoration: none;">${booking._id
               .toString()
-              .slice(-5)}</a></span>
+              .slice(-5)
+              .toUpperCase()}</a></span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Booking form name</span>
@@ -180,7 +181,9 @@ Express Transportation`;
         </div>
          <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Any instructions to driver </span>
-            <span> ${booking?.instructions?.length > 0 ? booking.instructions : 'NA'} </span>
+            <span> ${
+              booking?.instructions?.length > 0 ? booking.instructions : "NA"
+            } </span>
         </div>
          <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Duration</span>
@@ -287,8 +290,16 @@ Express Transportation`;
     throw new Error("Failed to send email");
   }
 };
+{/* <div style="text-align: center; margin-bottom: 20px;">
+<img src="https://albanynytaxiservice.com/backendlogo.png" alt="albanynytaxiservice Logo" style="" />
+</div>  */}
 // Function to send booking details to admin users
-const sendAdminBookingNotification = async (booking, carName, guestUser,name) => {
+const sendAdminBookingNotification = async (
+  booking,
+  carName,
+  guestUser,
+  name
+) => {
   console.log(guestUser);
   try {
     // Find all admin users
@@ -327,8 +338,10 @@ const sendAdminBookingNotification = async (booking, carName, guestUser,name) =>
           </tr>
           <tr>
             <td style="padding: 8px; width: 30%; color: #555;">RESERVATION NUMBER:</td>
-            <td style="padding: 8px;">${booking._id?.toString()
-            ?.slice(-5)}}</td>
+            <td style="padding: 8px;">${booking._id
+              ?.toString()
+              ?.slice(-5)
+              .toUpperCase()}</td>
           </tr>
           <tr>
             <td style="padding: 8px; color: #555;">Vehicle:</td>
@@ -348,13 +361,13 @@ const sendAdminBookingNotification = async (booking, carName, guestUser,name) =>
           </tr>
           <tr>
             <td style="padding: 8px; color: #555;">Any instructions to driver: </td>
-            <td style="padding: 8px;">${booking?.instructions?.length > 0 ? booking.instructions : 'NA'}</td>
+            <td style="padding: 8px;">${
+              booking?.instructions?.length > 0 ? booking.instructions : "NA"
+            }</td>
           </tr>
           <tr>
             <td style="padding: 8px; color: #555;">Pickup Time:</td>
-            <td style="padding: 8px;">${
-              booking.pickupDateTime
-            }</td>
+            <td style="padding: 8px;">${booking.pickupDateTime}</td>
           </tr>
           <tr>
             <td style="padding: 8px; color: #555;">Status:</td>
@@ -403,9 +416,11 @@ const sendAdminBookingNotification = async (booking, carName, guestUser,name) =>
   }
 };
 
-{/* <div style="text-align: center; margin-bottom: 20px;">
+{
+  /* <div style="text-align: center; margin-bottom: 20px;">
 <img src="https://albanynytaxiservice.com/Express-01.webp" alt="albanynytaxiservice Logo" style="max-width:auto; height: auto;">
-</div> */}
+</div> */
+}
 // Get booking details by booking ID
 exports.getBookingDetails = async (req, res) => {
   const { page = 1, limit = 10 } = req.query; // Default values if not provided
@@ -601,7 +616,8 @@ exports.updateBookingStatus = async (req, res) => {
           <h3 style="margin-top: 0; font-size: 18px; color: #333;">Booking Details:</h3>
           <p style="margin: 5px 0;color: #333"><strong>RESERVATION NUMBER:</strong> ${updatedBooking._id
             .toString()
-            .slice(-5)}</p>
+            .slice(-5)
+            .toUpperCase()}</p>
           <p style="margin: 5px 0;color: #333;"><strong>Status:</strong> ${status}</p>
           <p style="margin: 5px 0;color: #333;"><strong>Pickup Date Time:</strong> ${
             updatedBooking.pickupDateTime
@@ -639,7 +655,11 @@ exports.updateBookingStatus = async (req, res) => {
           <p style="margin: 5px 0;color: #333"><strong>Extra Hour(s):</strong> ${
             updatedBooking.extraHours
           } Hour(s)</p>
-          <p style="margin: 5px 0;color: #333"><strong>Any instructions to driver: </strong> ${updatedBooking?.instructions?.length > 0 ? updatedBooking.instructions : 'NA'}</p>
+          <p style="margin: 5px 0;color: #333"><strong>Any instructions to driver: </strong> ${
+            updatedBooking?.instructions?.length > 0
+              ? updatedBooking.instructions
+              : "NA"
+          }</p>
           <p style="margin: 5px 0;color: #333"><strong>Payment Status:</strong> ${
             updatedBooking.paymentStatus
               ? updatedBooking.paymentStatus

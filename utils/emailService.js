@@ -37,7 +37,7 @@ async function main(email,subject,text,html) {
         
         // Define and send message inside transporter.sendEmail() and await info about send from promise:
         let info = await transporter.sendMail({
-          from: '"albanynytaxiservice" <info@albanynytaxiservice.com>',
+          from: '"Express Transportation" <info@albanynytaxiservice.com>',
           to: email,
           subject: subject,
           text:text,
