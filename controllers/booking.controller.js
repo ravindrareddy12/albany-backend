@@ -646,7 +646,7 @@ exports.updateBookingStatus = async (req, res) => {
           </p>
           <p style="margin: 5px 0;color: #333"><strong>Distance:</strong> ${
             updatedBooking.distance
-          }</p>
+          } Miles</p>
           <p style="margin: 5px 0;color: #333"><strong>Duration:</strong> ${
             updatedBooking.duration
           }</p>
