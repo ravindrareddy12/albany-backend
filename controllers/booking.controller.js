@@ -95,7 +95,9 @@ exports.createBooking = async (req, res) => {
       booking,
       carName,
       guestUser,
-      car.passengers
+      car.passengers,
+      car,
+      car.bagCount
     );
 
     // Send booking details to admin users
@@ -125,7 +127,9 @@ const sendBookingDetailsEmail = async (
   booking,
   carName,
   user,
-  passengers
+  passengers,
+  car,
+  bagCount
 ) => {
   const subject = "Your Booking in Progress";
   const text = `Dear ${name},
@@ -237,7 +241,7 @@ Express Transportation`;
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Bag count</span>
-            <span>1</span>
+            <span>${bagCount}</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Passengers count</span>

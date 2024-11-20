@@ -18,6 +18,7 @@ const carSchema = new Schema({
     Stripeflatfee:{ type: Number },
     freeDeliveryUnder : {type:Number},
     Stripepercentagefee:{ type: Number },
+    bagCount:{type:String},
     createdAt: { type: Date, default: Date.now },
 
 });
