@@ -153,7 +153,9 @@ Express Transportation`;
   const html = `
    
 <div style="width: 100%; max-width: 600px; margin: auto; background-color: #fff; padding: 20px; border: 1px solid #e0e0e0; font-family: Times New Roman, Times, serif; color: #333;">
-
+ <div style="text-align: center; margin-bottom: 20px;">
+<img src="https://albanynytaxiservice.com/backendlogo.png" alt="albanynytaxiservice Logo" style="" />
+</div>  
     <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">General</h2>
     <div style="padding: 10px 0;">
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
@@ -294,9 +296,11 @@ Express Transportation`;
     throw new Error("Failed to send email");
   }
 };
-{/* <div style="text-align: center; margin-bottom: 20px;">
+{
+  /* <div style="text-align: center; margin-bottom: 20px;">
 <img src="https://albanynytaxiservice.com/backendlogo.png" alt="albanynytaxiservice Logo" style="" />
-</div>  */}
+</div>  */
+}
 // Function to send booking details to admin users
 const sendAdminBookingNotification = async (
   booking,
@@ -332,6 +336,9 @@ const sendAdminBookingNotification = async (
         Please review the booking details in the admin panel.`;
 
     const html = `
+    <div style="text-align: center; margin-bottom: 20px;">
+<img src="https://albanynytaxiservice.com/backendlogo.png" alt="albanynytaxiservice Logo" style="" />
+</div> 
       <div style="font-family: Arial, sans-serif; color: #333;">
         <h2 style="color: #DC143C;">New Booking Notification</h2>
         <p>A new booking has been created. Here are the details:</p>
@@ -581,6 +588,9 @@ exports.updateBookingStatus = async (req, res) => {
     const currentStep = progressSteps[status] || 0;
     const html = `
     <div style="max-width: 600px; margin: auto; font-family: 'Times New Roman', Times, serif;">
+    <div style="text-align: center; margin-bottom: 20px;">
+<img src="https://albanynytaxiservice.com/backendlogo.png" alt="albanynytaxiservice Logo" style="" />
+</div> 
       <div style="background-color: ${bgColor}; padding: 20px; text-align: center; color: white; border-top-left-radius: 10px; border-top-right-radius: 10px;">
         <h2 style="margin: 0;">Your Ride has been ${statusText}</h2>
       </div>
@@ -670,8 +680,8 @@ exports.updateBookingStatus = async (req, res) => {
               : "Pending"
           }</p>
         </div>
-        <p style="font-size: 14px; color: #555; margin-top: 15px;">Thank you for choosing Express Transportation.</p>
-        <p style="font-size: 12px; color: #888; text-align: center; margin-top: 20px;">Please do not reply to this email.</p>
+        <p style="font-size: 14px; color: #555; margin-top: 15px;">Thank you for booking with Express Transportation, where every ride is an opportunity to elevate your journey.</p>
+        <p style="font-size: 12px; color: #888; text-align: center; margin-top: 20px;">Please note that this is an automated email, and replies to this address are not monitored.For assistance or inquiries, kindly contact our team through our official channels. We are here to support you.</p>
       </div>
     </div>
   `;
