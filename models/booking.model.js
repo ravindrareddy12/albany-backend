@@ -19,7 +19,8 @@ const BookingSchema = new Schema({
     extraHours:{type:String},
     instructions:{type:String},
     tempName:{type:String},
-    routes :{type:Array}
+    routes :{type:Array},
+    isAdminDeleted:{type:Boolean}
 },{ timestamps: true });
 
 module.exports = mongoose.model('Booking', BookingSchema);  

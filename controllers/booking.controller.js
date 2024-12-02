@@ -530,7 +530,7 @@ exports.getAllBookings = async (req, res) => {
 
 // Update booking status by booking ID
 exports.updateBookingStatus = async (req, res) => {
-  const { status, comment } = req.body;
+  const { status, comment ,isAdminDeleted} = req.body;
 
   if (!status) {
     return res.status(400).json({ error: "Status is required" });
@@ -540,7 +540,7 @@ exports.updateBookingStatus = async (req, res) => {
     // Find and update the booking by ID
     const updatedBooking = await Booking.findByIdAndUpdate(
       req.params.id,
-      { status, comment: comment ? comment : "" },
+      { status, comment: comment ? comment : "" ,isAdminDeleted},
       { new: true }
     )
       .populate("userId", "name email")
@@ -752,3 +752,41 @@ function formatDateTimeTo12Hour(dateTimeString) {
 
   return date.toLocaleString("en-US", options);
 }
+
+
+exports.adminDeleteBooking = async (req, res) => {
+  const { bookingId } = req.params;
+  const { isAdminDeleted } = req.body;
+
+  try {
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      bookingId,
+      { isAdminDeleted },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedBooking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    res.status(200).json({ message: 'Booking updated successfully', updatedBooking });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating booking', error });
+  }
+};
+
+exports.permanentlyDeleteBooking = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const booking = await Booking.findByIdAndDelete(id);
+
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found.' });
+    }
+
+    res.status(200).json({ message: 'Booking permanently deleted.' });
+  } catch (error) {
+    console.error('Error deleting booking:', error);
+    res.status(500).json({ message: 'Server error.' });
+  }
+};

@@ -8,5 +8,6 @@ router.get('/bookings', isAdmin, bookingController.getAllBookings);
 router.get('/getUserBookings/:userId',isAuthenticated,  bookingController.getBookingsByUserId);
 router.put('/bookings/status/:id',isAdmin,  bookingController.updateBookingStatus);
 router.get('/by-pickup-date', bookingController.getBookingsByPickupDate);
- 
+router.put('/bookings/delete/:bookingId', bookingController.adminDeleteBooking);
+router.delete('/booking/permanent-delete/:id', bookingController.permanentlyDeleteBooking);
 module.exports = router;
