@@ -378,11 +378,11 @@ const sendAdminBookingNotification = async (
           </tr>
            <tr>
             <td style="padding: 8px; color: #555;">Duration: </td>
-            <td style="padding: 8px;">${booking.duration} Hour(s)</td>
+            <td style="padding: 8px;">${booking.duration}</td>
           </tr>
            <tr>
             <td style="padding: 8px; color: #555;">Distance : </td>
-            <td style="padding: 8px;">${booking.distance} Hour(s)</td>
+            <td style="padding: 8px;">${booking.distance} Miles</td>
           </tr>
            <tr>
             <td style="padding: 8px; color: #555;">Extra Hour(s): </td>
