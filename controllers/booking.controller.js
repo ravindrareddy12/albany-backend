@@ -463,7 +463,7 @@ exports.getBookingDetails = async (req, res) => {
     const booking = await Booking.findById(req.params.id)
       .populate("userId", "name email")
       .populate("guestUserId", "name email phone")
-      .populate("carId", "name perKmPrice model freeDeliveryUnder")
+      .populate("carId", "name perKmPrice model freeDeliveryUnder Priceperhour")
       .exec();
 
     if (!booking) {
@@ -501,7 +501,7 @@ exports.getBookingsByUserId = async (req, res) => {
     const bookings = await Booking.find({ guestUserId: guestUser._id })
       .populate("userId", "name email")
       .populate("guestUserId", "name email phone")
-      .populate("carId", "name perKmPrice perDayPrice model freeDeliveryUnder")
+      .populate("carId", "name perKmPrice perDayPrice model freeDeliveryUnder Priceperhour")
       .exec();
 
     // Get total count of bookings
@@ -540,7 +540,7 @@ exports.getAllBookings = async (req, res) => {
     const bookings = await Booking.find()
       .populate("userId", "name email")
       .populate("guestUserId", "name email phone")
-      .populate("carId", "name perKmPrice perDayPrice model carImage freeDeliveryUnder Deliveryfee")
+      .populate("carId", "name perKmPrice perDayPrice model carImage freeDeliveryUnder Deliveryfee Priceperhour")
       .sort({ [sortBy]: order === "asc" ? 1 : -1 }) // Sort results
       .exec();
 
