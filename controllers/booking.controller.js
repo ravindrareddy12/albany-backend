@@ -29,7 +29,10 @@ exports.createBooking = async (req, res) => {
     routes,
     extraHours,
     instructions,
-    tripType
+    tripType,
+    pickupCoords,
+    dropoffCoords,
+    stopsCoords
   } = req.body;
 
   let guestUser;
@@ -51,7 +54,10 @@ exports.createBooking = async (req, res) => {
       extraHours,
       instructions,
       tempName: name,
-      tripType
+      tripType,
+      pickupCoords,
+      dropoffCoords,
+      stopsCoords
     };
 
     // Check if guest user information is provided
