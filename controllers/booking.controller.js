@@ -29,6 +29,7 @@ exports.createBooking = async (req, res) => {
     routes,
     extraHours,
     instructions,
+    tripType
   } = req.body;
 
   let guestUser;
@@ -50,6 +51,7 @@ exports.createBooking = async (req, res) => {
       extraHours,
       instructions,
       tempName: name,
+      tripType
     };
 
     // Check if guest user information is provided
@@ -172,6 +174,10 @@ Express Transportation`;
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Status</span>
             <span>${booking.status}</span>
+        </div>
+         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
+            <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Trip Type</span>
+            <span>${booking.tripType ? booking.tripType : '' }</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Service type</span>
@@ -366,6 +372,10 @@ const sendAdminBookingNotification = async (
             <td style="padding: 8px; color: #555;">Drop Location:</td>
             <td style="padding: 8px;">${booking.dropLocation}</td>
           </tr>
+            <tr>
+            <td style="padding: 8px; color: #555;">Trip Type:</td>
+            <td style="padding: 8px;">${booking.tripType ? booking.tripType : ''}</td>
+          </tr>
            <tr>
             <td style="padding: 8px; color: #555;">Extra Hour(s): </td>
             <td style="padding: 8px;">${booking.extraHours} Hour(s)</td>
@@ -387,6 +397,10 @@ const sendAdminBookingNotification = async (
           <tr>
             <td style="padding: 8px; color: #555;">Payment Status:</td>
             <td style="padding: 8px;">${booking.paymentStatus}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; color: #555;">Order total amount:</td>
+            <td style="padding: 8px;">${booking.fare}</td>
           </tr>
         </table>
 
@@ -669,6 +683,9 @@ exports.updateBookingStatus = async (req, res) => {
           <p style="margin: 5px 0;color: #333"><strong>Extra Hour(s):</strong> ${
             updatedBooking.extraHours
           } Hour(s)</p>
+           <p style="margin: 5px 0;color: #333"><strong>Trip Type:</strong> ${
+            updatedBooking.tripType ? updatedBooking.tripType : ''
+          }</p>
           <p style="margin: 5px 0;color: #333"><strong>Any instructions to driver: </strong> ${
             updatedBooking?.instructions?.length > 0
               ? updatedBooking.instructions

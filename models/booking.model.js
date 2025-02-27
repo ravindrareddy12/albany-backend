@@ -20,6 +20,7 @@ const BookingSchema = new Schema({
     instructions:{type:String},
     tempName:{type:String},
     routes :{type:Array},
+    tripType:{type:String},
     isAdminDeleted:{type:Boolean}
 },{ timestamps: true });
 
