@@ -377,6 +377,14 @@ const sendAdminBookingNotification = async (
             <td style="padding: 8px;">${booking.tripType ? booking.tripType : ''}</td>
           </tr>
            <tr>
+            <td style="padding: 8px; color: #555;">Duration: </td>
+            <td style="padding: 8px;">${booking.duration} Hour(s)</td>
+          </tr>
+           <tr>
+            <td style="padding: 8px; color: #555;">Distance : </td>
+            <td style="padding: 8px;">${booking.distance} Hour(s)</td>
+          </tr>
+           <tr>
             <td style="padding: 8px; color: #555;">Extra Hour(s): </td>
             <td style="padding: 8px;">${booking.extraHours} Hour(s)</td>
           </tr>
