@@ -4,6 +4,7 @@ const { isAuthenticated, isAdmin, isUser } = require('../middleware/authChecker'
 const router = express.Router();
 
 router.post('/bookings',  bookingController.createBooking);
+router.put('/bookings/:id',  bookingController.updateBooking);
 router.get('/bookings', isAdmin, bookingController.getAllBookings);
 router.get('/getUserBookings/:userId',isAuthenticated,  bookingController.getBookingsByUserId);
 router.put('/bookings/status/:id',isAdmin,  bookingController.updateBookingStatus);

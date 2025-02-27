@@ -817,3 +817,87 @@ exports.permanentlyDeleteBooking = async (req, res) => {
     res.status(500).json({ message: 'Server error.' });
   }
 };
+
+exports.updateBooking = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    // Find and update the booking
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true }
+    )
+    .populate("carId", "name perKmPrice model carImage freeDeliveryUnder Deliveryfee Priceperhour passengers bagCount")
+    .populate("guestUserId", "name email phone")
+    .exec();
+
+    if (!updatedBooking) {
+      return res.status(404).json({ error: "Booking not found" });
+    }
+
+    // Get car and guest user details
+    const car = updatedBooking.carId;
+    const guestUser = updatedBooking.guestUserId;
+
+    // Send email notification about the update
+    const subject = "Booking Update Confirmation";
+    const text = `Dear ${updatedBooking.tempName},
+
+Your booking has been updated. Here are the updated details:
+
+Booking ID: ${updatedBooking._id}
+Vehicle: ${car.name}
+Pickup Location: ${updatedBooking.pickupLocation}
+Drop Location: ${updatedBooking.dropLocation}
+Pickup Time: ${updatedBooking.pickupDateTime}
+Status: ${updatedBooking.status}
+Distance: ${updatedBooking.distance} miles
+Duration: ${updatedBooking.duration}
+Total Fare: $${updatedBooking.fare}
+
+Thank you for choosing our service.
+
+Best regards,
+Express Transportation`;
+
+    const html = `
+    <div style="width: 100%; max-width: 600px; margin: auto; background-color: #fff; padding: 20px; border: 1px solid #e0e0e0; font-family: Times New Roman, Times, serif; color: #333;">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <img src="https://albanynytaxiservice.com/backendlogo.png" alt="albanynytaxiservice Logo" style="" />
+      </div>
+      <h2 style="font-size: 18px; color: #333; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">Booking Update Confirmation</h2>
+      <div style="padding: 10px 0;">
+        <div style="border: 1px solid #ddd; padding: 15px; background-color: #ffffff; border-radius: 8px;">
+          <p style="margin: 5px 0;color: #333"><strong>RESERVATION NUMBER:</strong> ${updatedBooking._id.toString().slice(-5).toUpperCase()}</p>
+          <p style="margin: 5px 0;color: #333;"><strong>Status:</strong> ${updatedBooking.status}</p>
+          <p style="margin: 5px 0;color: #333;"><strong>Vehicle:</strong> ${car.name}</p>
+          <p style="margin: 5px 0;color: #333;"><strong>Pickup Location:</strong> ${updatedBooking.pickupLocation}</p>
+          <p style="margin: 5px 0;color: #333;"><strong>Drop Location:</strong> ${updatedBooking.dropLocation}</p>
+          <p style="margin: 5px 0;color: #333;"><strong>Pickup Time:</strong> ${updatedBooking.pickupDateTime}</p>
+          <p style="margin: 5px 0;color: #333;"><strong>Distance:</strong> ${updatedBooking.distance} Miles</p>
+          <p style="margin: 5px 0;color: #333;"><strong>Duration:</strong> ${updatedBooking.duration}</p>
+          <p style="margin: 5px 0;color: #333;"><strong>Extra Hours:</strong> ${updatedBooking.extraHours} Hour(s)</p>
+          <p style="margin: 5px 0;color: #333;"><strong>Transfer Type:</strong> ${updatedBooking.tripType || 'One Way'}</p>
+          <p style="margin: 5px 0;color: #333;"><strong>Total Fare:</strong> $${updatedBooking.fare}</p>
+          <p style="margin: 5px 0;color: #333;"><strong>Payment Status:</strong> ${updatedBooking.paymentStatus}</p>
+        </div>
+      </div>
+      <p style="font-size: 14px; color: #555; margin-top: 15px;">Thank you for choosing Express Transportation. If you have any questions, please don't hesitate to contact us.</p>
+    </div>`;
+
+    // Send email to guest user
+    await main(guestUser.email, subject, text, html);
+
+    // Send the response
+    res.status(200).json({
+      message: "Booking updated successfully",
+      booking: updatedBooking
+    });
+
+  } catch (error) {
+    console.error("Error updating booking:", error);
+    res.status(400).json({ error: "Failed to update booking" });
+  }
+};
