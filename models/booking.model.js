@@ -8,6 +8,7 @@ const BookingSchema = new Schema({
     pickupLocation: { type: String, required: true },
     dropLocation: { type: String, required: true },
     pickupDateTime: { type: String, required: true },
+    pickupDate: { type: String, required: true },
     dropDateTime: { type: String, required: true },
     status: { type: String, required: true },
     fare: { type: Number, required: true },
