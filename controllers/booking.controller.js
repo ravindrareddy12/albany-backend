@@ -872,7 +872,7 @@ Express Transportation`;
         <div style="border: 1px solid #ddd; padding: 15px; background-color: #ffffff; border-radius: 8px;">
           <p style="margin: 5px 0;color: #333"><strong>RESERVATION NUMBER:</strong> ${updatedBooking._id.toString().slice(-5).toUpperCase()}</p>
           <p style="margin: 5px 0;color: #333;"><strong>Status:</strong> ${updatedBooking.status}</p>
-          <p style="margin: 5px 0;color: #333;"><strong>Vehicle:</strong> ${car.name}</p>
+
           <p style="margin: 5px 0;color: #333;"><strong>Pickup Location:</strong> ${updatedBooking.pickupLocation}</p>
           <p style="margin: 5px 0;color: #333;"><strong>Drop Location:</strong> ${updatedBooking.dropLocation}</p>
           <p style="margin: 5px 0;color: #333;"><strong>Pickup Time:</strong> ${updatedBooking.pickupDateTime}</p>
