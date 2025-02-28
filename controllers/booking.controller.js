@@ -207,7 +207,7 @@ Express Transportation`;
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Transfer type</span>
-            <span>${booking.tripType ? booking.tripType : ''}</span>
+            <span>${booking.tripType ? booking.tripType === 'roundTrip' ? 'Round Trip' : 'One Way' : ''}</span>
         </div>
         <div style="display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px;">
             <span style="color: #666; font-weight: bold; min-width: 150px; margin-right: 20px;">Pickup date and time</span>
@@ -378,7 +378,7 @@ const sendAdminBookingNotification = async (
           </tr>
             <tr>
             <td style="padding: 8px; color: #555;">Transfer Type:</td>
-            <td style="padding: 8px;">${booking.tripType ? booking.tripType : ''}</td>
+            <td style="padding: 8px;">${booking.tripType ? booking.tripType === 'roundTrip' ? 'Round Trip' : 'One Way' : ''}</td>
           </tr>
            <tr>
             <td style="padding: 8px; color: #555;">Duration: </td>
@@ -696,7 +696,7 @@ exports.updateBookingStatus = async (req, res) => {
             updatedBooking.extraHours
           } Hour(s)</p>
            <p style="margin: 5px 0;color: #333"><strong>Transfer Type:</strong> ${
-            updatedBooking.tripType ? updatedBooking.tripType : ''
+            updatedBooking.tripType ? updatedBooking.tripType === 'roundTrip' ? 'Round Trip' : 'One Way' : ''
           }</p>
           <p style="margin: 5px 0;color: #333"><strong>Any instructions to driver: </strong> ${
             updatedBooking?.instructions?.length > 0
@@ -881,7 +881,7 @@ Express Transportation`;
           <p style="margin: 5px 0;color: #333;"><strong>Distance:</strong> ${updatedBooking.distance} Miles</p>
           <p style="margin: 5px 0;color: #333;"><strong>Duration:</strong> ${updatedBooking.duration}</p>
           <p style="margin: 5px 0;color: #333;"><strong>Extra Hours:</strong> ${updatedBooking.extraHours} Hour(s)</p>
-          <p style="margin: 5px 0;color: #333;"><strong>Transfer Type:</strong> ${updatedBooking.tripType || 'One Way'}</p>
+          <p style="margin: 5px 0;color: #333;"><strong>Transfer Type:</strong> ${updatedBooking.tripType ? updatedBooking.tripType === 'roundTrip' ? 'Round Trip'  : 'One Way' : ''}</p>
           <p style="margin: 5px 0;color: #333;"><strong>Total Fare:</strong> $${updatedBooking.fare}</p>
           <p style="margin: 5px 0;color: #333;"><strong>Payment Status:</strong> ${updatedBooking.paymentStatus}</p>
         </div>
