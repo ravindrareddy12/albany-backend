@@ -25,7 +25,7 @@ const BookingSchema = new Schema({
     isAdminDeleted:{type:Boolean},
     pickupCoords:{type:Object},
     dropoffCoords:{type:Object},
-    stopsCoords: { type: Object },    
+    stopsCoords: { type: Array },    
 },{ timestamps: true });
 
 module.exports = mongoose.model('Booking', BookingSchema);  
